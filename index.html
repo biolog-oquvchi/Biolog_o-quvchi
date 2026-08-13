@@ -14,7 +14,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 1000; text-align: center; padding: 20px; transition: opacity 0.5s ease;
         }
-        .welcome-card { background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 16px; max-w: 380px; width: 100%; }
+        .welcome-card { background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 16px; max-width: 380px; width: 100%; }
         .welcome-badge { display: inline-block; background: white; color: #065f46; font-weight: bold; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin-top: 15px; }
 
         /* Header */
@@ -55,7 +55,7 @@
 </head>
 <body>
 
-    <!-- KIRISH EKRANI (Aynan 2 sekund duradi) -->
+    <!-- KIRISH EKRANI (2 sekund) -->
     <div id="welcome-screen">
         <div class="welcome-card">
             <h1 style="font-size: 22px; margin-bottom: 8px;">Assalomu alaykum!</h1>
@@ -136,6 +136,12 @@
                 <!-- SOZLAMALAR -->
                 <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
                     <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
+                    
+                    <div>
+                        <label>Testga kirish kodi (Kodsiz bo'lishi uchun bo'sh qoldiring):</label>
+                        <input type="text" id="cfg-quiz-pass" placeholder="Masalan: 1234 yoki bo'sh qoldiring">
+                    </div>
+
                     <div class="grid-2">
                         <div>
                             <label>Vaqt (daqiqa):</label>
@@ -186,7 +192,6 @@
     </main>
 
     <script>
-        // Aynan 2 sekund (2000ms) yo'qolishi uchun
         setTimeout(() => {
             const w = document.getElementById('welcome-screen');
             if(w) { w.style.opacity = '0'; setTimeout(() => w.style.display = 'none', 500); }
@@ -197,7 +202,7 @@
             { text: "Fotosintez jarayoni qaysi organoidda boradi?", options: ["MitoXondriya", "Xloroplast", "Ribosoma", "Lizosoma"], correct: 1 }
         ];
         let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
-        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { duration: 15, points: 2, start: "", end: "" };
+        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { quizPass: "", duration: 15, points: 2, start: "", end: "" };
 
         let currentQ = 0, score = 0, currentStudent = "", selectedOption = null, timerInterval = null, timeLeft = 0;
 
@@ -213,6 +218,7 @@
         }
 
         function saveSettings() {
+            settings.quizPass = document.getElementById('cfg-quiz-pass').value.trim();
             settings.duration = parseInt(document.getElementById('cfg-duration').value) || 15;
             settings.points = parseFloat(document.getElementById('cfg-points').value) || 2;
             settings.start = document.getElementById('cfg-start').value;
@@ -222,6 +228,7 @@
         }
 
         function loadAdminSettings() {
+            document.getElementById('cfg-quiz-pass').value = settings.quizPass || "";
             document.getElementById('cfg-duration').value = settings.duration || 15;
             document.getElementById('cfg-points').value = settings.points || 2;
             document.getElementById('cfg-start').value = settings.start || "";
@@ -237,6 +244,15 @@
             const now = new Date();
             if(settings.start && new Date(settings.start) > now) { alert("Test hali boshlanmagan!"); return; }
             if(settings.end && new Date(settings.end) < now) { alert("Test vaqti tugagan!"); return; }
+
+            // TESTGA KIRISH KODI TEKSHIRUVI
+            if(settings.quizPass && settings.quizPass !== "") {
+                const userCode = prompt("Testga kirish kodini kiriting:");
+                if(userCode !== settings.quizPass) {
+                    alert("Test kirish kodi noto'g'ri!");
+                    return;
+                }
+            }
 
             currentStudent = nameInput; currentQ = 0; score = 0;
             document.getElementById('start-card').classList.add('hidden');
@@ -365,7 +381,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 1000; text-align: center; padding: 20px; transition: opacity 0.5s ease;
         }
-        .welcome-card { background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 16px; max-w: 380px; width: 100%; }
+        .welcome-card { background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 16px; max-width: 380px; width: 100%; }
         .welcome-badge { display: inline-block; background: white; color: #065f46; font-weight: bold; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin-top: 15px; }
 
         /* Header */
@@ -406,7 +422,7 @@
 </head>
 <body>
 
-    <!-- KIRISH EKRANI (Aynan 2 sekund duradi) -->
+    <!-- KIRISH EKRANI (2 sekund) -->
     <div id="welcome-screen">
         <div class="welcome-card">
             <h1 style="font-size: 22px; margin-bottom: 8px;">Assalomu alaykum!</h1>
@@ -487,6 +503,12 @@
                 <!-- SOZLAMALAR -->
                 <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
                     <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
+                    
+                    <div>
+                        <label>Testga kirish kodi (Kodsiz bo'lishi uchun bo'sh qoldiring):</label>
+                        <input type="text" id="cfg-quiz-pass" placeholder="Masalan: 1234 yoki bo'sh qoldiring">
+                    </div>
+
                     <div class="grid-2">
                         <div>
                             <label>Vaqt (daqiqa):</label>
@@ -537,7 +559,6 @@
     </main>
 
     <script>
-        // Aynan 2 sekund (2000ms) yo'qolishi uchun
         setTimeout(() => {
             const w = document.getElementById('welcome-screen');
             if(w) { w.style.opacity = '0'; setTimeout(() => w.style.display = 'none', 500); }
@@ -548,7 +569,7 @@
             { text: "Fotosintez jarayoni qaysi organoidda boradi?", options: ["MitoXondriya", "Xloroplast", "Ribosoma", "Lizosoma"], correct: 1 }
         ];
         let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
-        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { duration: 15, points: 2, start: "", end: "" };
+        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { quizPass: "", duration: 15, points: 2, start: "", end: "" };
 
         let currentQ = 0, score = 0, currentStudent = "", selectedOption = null, timerInterval = null, timeLeft = 0;
 
@@ -564,6 +585,7 @@
         }
 
         function saveSettings() {
+            settings.quizPass = document.getElementById('cfg-quiz-pass').value.trim();
             settings.duration = parseInt(document.getElementById('cfg-duration').value) || 15;
             settings.points = parseFloat(document.getElementById('cfg-points').value) || 2;
             settings.start = document.getElementById('cfg-start').value;
@@ -573,6 +595,7 @@
         }
 
         function loadAdminSettings() {
+            document.getElementById('cfg-quiz-pass').value = settings.quizPass || "";
             document.getElementById('cfg-duration').value = settings.duration || 15;
             document.getElementById('cfg-points').value = settings.points || 2;
             document.getElementById('cfg-start').value = settings.start || "";
@@ -588,6 +611,15 @@
             const now = new Date();
             if(settings.start && new Date(settings.start) > now) { alert("Test hali boshlanmagan!"); return; }
             if(settings.end && new Date(settings.end) < now) { alert("Test vaqti tugagan!"); return; }
+
+            // TESTGA KIRISH KODI TEKSHIRUVI
+            if(settings.quizPass && settings.quizPass !== "") {
+                const userCode = prompt("Testga kirish kodini kiriting:");
+                if(userCode !== settings.quizPass) {
+                    alert("Test kirish kodi noto'g'ri!");
+                    return;
+                }
+            }
 
             currentStudent = nameInput; currentQ = 0; score = 0;
             document.getElementById('start-card').classList.add('hidden');
