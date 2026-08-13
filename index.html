@@ -8,7 +8,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: #ecfdf5; color: #1e293b; padding-bottom: 20px; }
         
-        /* ULTRA-LIGHTWELCOME SCREEN (Faqat Pure CSS 2s) */
+        /* PURE CSS 2s WELCOME SCREEN */
         #welcome-screen {
             position: fixed; inset: 0; background: #047857; color: white;
             display: flex; align-items: center; justify-content: center;
@@ -34,7 +34,7 @@
         .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #a7f3d0; margin-bottom: 15px; }
         .hidden { display: none !important; }
 
-        /* Form va elementlar */
+        /* Elementlar */
         input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-top: 4px; margin-bottom: 12px; }
         input:focus { border-color: #059669; }
         label { font-size: 12px; font-weight: bold; color: #334155; }
@@ -49,6 +49,10 @@
         .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
         .option-btn.selected { border-color: #059669; background: #d1fae5; font-weight: bold; }
 
+        /* Savollar ro'yxati admin paneli uchun */
+        .q-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+        .del-btn { background: #ffe4e6; color: #e11d48; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
         th { background: #ecfdf5; color: #065f46; font-size: 11px; }
@@ -57,7 +61,7 @@
 </head>
 <body>
 
-    <!-- KIRISH EKRANI (JS shart emas, CSS o'zi 2sekundda yopiladi) -->
+    <!-- KIRISH EKRANI (2 sekund) -->
     <div id="welcome-screen">
         <div class="welcome-card">
             <h1 style="font-size: 20px; margin-bottom: 6px;">Assalomu alaykum!</h1>
@@ -136,10 +140,11 @@
             <div class="card">
                 <h2 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">⚙️ Admin Paneli</h2>
                 
+                <!-- TEST SOZLAMALARI -->
                 <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
                     <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
                     <div>
-                        <label>Test Kirish Kodi (Bo'sh qolsa kodsiz bo'ladi):</label>
+                        <label>Test Kirish Kodi (Bo'sh qolsa kodsiz):</label>
                         <input type="text" id="cfg-quiz-pass" placeholder="Masalan: 1234">
                     </div>
                     <div class="grid-2">
@@ -163,23 +168,48 @@
                     <button onclick="saveSettings()" class="btn">Sozlamalarni saqlash</button>
                 </div>
 
-                <div>
+                <!-- YANGI SAVOL QO'SHISH -->
+                <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;">
                     <h3 style="font-size: 14px; margin-bottom: 8px;">Yangi Savol Qo'shish</h3>
-                    <input type="text" id="new-q-text" placeholder="Savol matni">
-                    <div class="grid-2">
-                        <input type="text" id="opt-a" placeholder="A variant">
-                        <input type="text" id="opt-b" placeholder="B variant">
-                        <input type="text" id="opt-c" placeholder="C variant">
-                        <input type="text" id="opt-d" placeholder="D variant">
-                    </div>
-                    <label>To'g'ri javob:</label>
-                    <select id="correct-opt">
-                        <option value="0">A variant</option>
-                        <option value="1">B variant</option>
-                        <option value="2">C variant</option>
-                        <option value="3">D variant</option>
+                    
+                    <label>Savol Turi:</label>
+                    <select id="q-type" onchange="toggleQType()">
+                        <option value="choice">Yopiq test (ABCD / Variantli)</option>
+                        <option value="text">Ochiq test (Yozma javobli)</option>
                     </select>
+
+                    <input type="text" id="new-q-text" placeholder="Savol matni">
+
+                    <!-- ABCD javoblar bo'limi -->
+                    <div id="choice-fields">
+                        <div class="grid-2">
+                            <input type="text" id="opt-a" placeholder="A variant">
+                            <input type="text" id="opt-b" placeholder="B variant">
+                            <input type="text" id="opt-c" placeholder="C variant">
+                            <input type="text" id="opt-d" placeholder="D variant">
+                        </div>
+                        <label>To'g'ri javob varianti:</label>
+                        <select id="correct-opt">
+                            <option value="0">A variant</option>
+                            <option value="1">B variant</option>
+                            <option value="2">C variant</option>
+                            <option value="3">D variant</option>
+                        </select>
+                    </div>
+
+                    <!-- Yozma javob bo'limi -->
+                    <div id="text-fields" class="hidden">
+                        <label>To'g'ri yozma javob matni:</label>
+                        <input type="text" id="correct-text-ans" placeholder="Masalan: Xloroplast">
+                    </div>
+
                     <button onclick="addQuestion()" class="btn">Savolni saqlash</button>
+                </div>
+
+                <!-- SAVOLLAR RO'YXATI VA O'CHIRISH -->
+                <div>
+                    <h3 style="font-size: 14px; margin-bottom: 8px;">Mavjud Savollar Ro'yxati</h3>
+                    <div id="admin-q-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 10px; padding: 4px; margin-bottom: 10px;"></div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
@@ -192,12 +222,24 @@
 
     <script>
         let questions = JSON.parse(localStorage.getItem('bio_questions')) || [
-            { text: "Hujayra nazariyasiga kim asos solgan?", options: ["Shleydan va Shvann", "R.Guk", "Latsenkos", "I.Pavlov"], correct: 0 }
+            { type: "choice", text: "Hujayra nazariyasiga kim asos solgan?", options: ["Shleydan va Shvann", "R.Guk", "Latsenkos", "I.Pavlov"], correct: 0 },
+            { type: "text", text: "Fotosintez jarayoni qaysi organoidda boradi?", correctText: "Xloroplast" }
         ];
         let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
         let settings = JSON.parse(localStorage.getItem('bio_settings')) || { quizPass: "", duration: 15, points: 2, start: "", end: "" };
 
         let currentQ = 0, score = 0, currentStudent = "", selectedOption = null, timerInterval = null, timeLeft = 0;
+
+        function toggleQType() {
+            const type = document.getElementById('q-type').value;
+            if(type === 'choice') {
+                document.getElementById('choice-fields').classList.remove('hidden');
+                document.getElementById('text-fields').classList.add('hidden');
+            } else {
+                document.getElementById('choice-fields').classList.add('hidden');
+                document.getElementById('text-fields').classList.remove('hidden');
+            }
+        }
 
         function switchTab(tab) {
             ['quiz', 'leaderboard', 'admin'].forEach(t => {
@@ -227,6 +269,36 @@
             document.getElementById('cfg-start').value = settings.start || "";
             document.getElementById('cfg-end').value = settings.end || "";
             document.getElementById('admin-q-count').innerText = `Jami savollar: ${questions.length} ta`;
+            
+            renderAdminQList();
+        }
+
+        function renderAdminQList() {
+            const listEl = document.getElementById('admin-q-list');
+            listEl.innerHTML = '';
+            if(questions.length === 0) {
+                listEl.innerHTML = `<div style="text-align:center; padding:10px; font-size:12px; color:#94a3b8;">Savollar yo'q</div>`;
+                return;
+            }
+            questions.forEach((q, idx) => {
+                const typeTag = (q.type === 'text') ? '[Ochiq]' : '[ABCD]';
+                listEl.innerHTML += `
+                    <div class="q-item">
+                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80%;">
+                            <b>${idx+1}.</b> <i style="color:#059669">${typeTag}</i> ${q.text}
+                        </span>
+                        <button class="del-btn" onclick="deleteQuestion(${idx})">🗑 O'chirish</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteQuestion(index) {
+            if(confirm("Ushbu savolni o'chirmoqchimisiz?")) {
+                questions.splice(index, 1);
+                localStorage.setItem('bio_questions', JSON.stringify(questions));
+                loadAdminSettings();
+            }
         }
 
         function startQuiz() {
@@ -271,23 +343,45 @@
             
             const optsBox = document.getElementById('options-container');
             optsBox.innerHTML = '';
-            q.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "option-btn";
-                btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
-                btn.onclick = () => {
-                    const children = optsBox.children;
-                    for(let i=0; i<children.length; i++) children[i].classList.remove('selected');
-                    btn.classList.add('selected');
-                    selectedOption = idx;
-                };
-                optsBox.appendChild(btn);
-            });
+
+            // Savol turi bo'yicha chiqarish (Ochiq yoki Yopiq)
+            if(q.type === 'text') {
+                optsBox.innerHTML = `
+                    <label style="margin-bottom: 4px; display:block;">Javobingizni yozing:</label>
+                    <input type="text" id="open-ans-input" placeholder="Javobingizni shu yerga kiriting..." style="margin-bottom:0;">
+                `;
+            } else {
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "option-btn";
+                    btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
+                    btn.onclick = () => {
+                        const children = optsBox.children;
+                        for(let i=0; i<children.length; i++) children[i].classList.remove('selected');
+                        btn.classList.add('selected');
+                        selectedOption = idx;
+                    };
+                    optsBox.appendChild(btn);
+                });
+            }
         }
 
         function nextQuestion() {
-            if(selectedOption === null) { alert("Javob tanlang!"); return; }
-            if(selectedOption === questions[currentQ].correct) score++;
+            const q = questions[currentQ];
+
+            if(q.type === 'text') {
+                const userAns = document.getElementById('open-ans-input').value.trim().toLowerCase();
+                if(!userAns) { alert("Javobingizni kiriting!"); return; }
+                if(userAns === q.correctText.trim().toLowerCase()) {
+                    score++;
+                }
+            } else {
+                if(selectedOption === null) { alert("Javob tanlang!"); return; }
+                if(selectedOption === q.correct) {
+                    score++;
+                }
+            }
+
             currentQ++;
             if(currentQ < questions.length) showQuestion();
             else finishQuiz();
@@ -324,20 +418,32 @@
         }
 
         function addQuestion() {
+            const type = document.getElementById('q-type').value;
             const text = document.getElementById('new-q-text').value.trim();
-            const a = document.getElementById('opt-a').value.trim();
-            const b = document.getElementById('opt-b').value.trim();
-            const c = document.getElementById('opt-c').value.trim();
-            const d = document.getElementById('opt-d').value.trim();
-            const correct = parseInt(document.getElementById('correct-opt').value);
 
-            if(!text || !a || !b || !c || !d) { alert("To'ldiring!"); return; }
-            questions.push({ text: text, options: [a, b, c, d], correct: correct });
+            if(!text) { alert("Savol matnini kiriting!"); return; }
+
+            if(type === 'text') {
+                const correctText = document.getElementById('correct-text-ans').value.trim();
+                if(!correctText) { alert("To'g'ri yozma javobni kiriting!"); return; }
+                questions.push({ type: "text", text: text, correctText: correctText });
+                document.getElementById('correct-text-ans').value = '';
+            } else {
+                const a = document.getElementById('opt-a').value.trim();
+                const b = document.getElementById('opt-b').value.trim();
+                const c = document.getElementById('opt-c').value.trim();
+                const d = document.getElementById('opt-d').value.trim();
+                const correct = parseInt(document.getElementById('correct-opt').value);
+
+                if(!a || !b || !c || !d) { alert("Barcha variantlarni to'ldiring!"); return; }
+                questions.push({ type: "choice", text: text, options: [a, b, c, d], correct: correct });
+                document.getElementById('opt-a').value = ''; document.getElementById('opt-b').value = '';
+                document.getElementById('opt-c').value = ''; document.getElementById('opt-d').value = '';
+            }
+
             localStorage.setItem('bio_questions', JSON.stringify(questions));
             alert("Savol saqlandi!");
             document.getElementById('new-q-text').value = '';
-            document.getElementById('opt-a').value = ''; document.getElementById('opt-b').value = '';
-            document.getElementById('opt-c').value = ''; document.getElementById('opt-d').value = '';
             loadAdminSettings();
         }
 
