@@ -3,29 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biolog o'quvchi — Onlayn Test Platformasi</title>
+    <title>Biolog o'quvchi - Onlayn Test Platformasi</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @keyframes fadeIn { 
-            0% { opacity: 0; transform: translateY(20px); } 
-            20% { opacity: 1; transform: translateY(0); }
-            80% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); }
-        }
-        .welcome-anim { animation: fadeIn 5s ease-in-out forwards; }
+        .welcome-anim { transition: opacity 0.4s ease; }
     </style>
 </head>
 <body class="bg-emerald-50 min-h-screen text-slate-800 font-sans">
 
-    <!-- WELCOME SCREEN (5 soniyalik Animatsiya) -->
+    <!-- WELCOME SCREEN (Qotmaydigan yengil variant) -->
     <div id="welcome-screen" class="fixed inset-0 bg-emerald-700 flex flex-col items-center justify-center text-white z-[100] p-6 text-center">
-        <div class="welcome-anim space-y-4 max-w-md">
-            <i class="fa-solid fa-kaaba text-4xl text-amber-300 mb-2"></i>
+        <div class="welcome-anim space-y-3 max-w-md">
+            <i class="fa-solid fa-kaaba text-4xl text-amber-300 mb-1"></i>
             <h1 class="text-2xl md:text-3xl font-bold tracking-wide">Assalomu alaykum!</h1>
-            <p class="text-xl md:text-2xl font-serif italic text-emerald-100">Bismillahir Rohmanir Rohiym</p>
+            <p class="text-lg md:text-xl font-serif italic text-emerald-100">Bismillahir Rahmanir Rahim</p>
             <div class="pt-2">
-                <span class="inline-block bg-white text-emerald-800 text-sm md:text-base font-bold px-6 py-2.5 rounded-full shadow-lg border border-emerald-100">
+                <span class="inline-block bg-white text-emerald-800 text-sm font-bold px-5 py-2 rounded-full shadow">
                     ✨ Testda omad yor bo'lsin!
                 </span>
             </div>
@@ -43,10 +37,10 @@
                 <button onclick="switchTab('quiz')" id="tab-quiz" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow">
                     <i class="fa-solid fa-pen-to-square mr-1"></i> Test
                 </button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition">
+                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600">
                     <i class="fa-solid fa-trophy mr-1"></i> Reyting
                 </button>
-                <button onclick="checkAdminPassword()" id="tab-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition">
+                <button onclick="checkAdminPassword()" id="tab-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600">
                     <i class="fa-solid fa-lock mr-1"></i> Admin
                 </button>
             </nav>
@@ -54,1465 +48,248 @@
     </header>
 
     <main class="max-w-2xl mx-auto p-4 mt-2">
-
-        <!-- KIRISH VA RO'YXATDAN O'TISH KARTASI -->
-        <section id="section-start" class="block">
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center max-w-md mx-auto space-y-4">
+        <!-- TEST BO'LIMI -->
+        <section id="section-quiz" class="block">
+            <div id="start-card" class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center max-w-md mx-auto space-y-4">
                 <i class="fa-solid fa-user-pen text-4xl text-emerald-600 mb-1"></i>
                 <h2 class="text-xl font-bold text-slate-800">Testga xush kelibsiz!</h2>
                 
-                <!-- TEST MAVJUD BO'LMAGANDA CHIQADIGAN XABAR -->
-                <div id="no-quiz-alert" class="hidden p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800 text-sm font-bold space-y-1">
-                    <i class="fa-solid fa-circle-exclamation text-rose-500 text-3xl mb-1 block"></i>
-                    <p class="text-base">Afsuski, hozirda test jarayoni bo'lmayapti.</p>
-                    <p id="no-quiz-subtext" class="text-xs font-medium text-rose-600 mt-1"></p>
-                </div>
-
-                <!-- TEST MAVJUD BO'LGANDA CHIQADIGAN SHAKL -->
                 <div id="student-form-box" class="space-y-3 text-left pt-2">
                     <p class="text-xs text-slate-600 text-center">Testni boshlash uchun ismingizni kiritib tugmani bosing.</p>
-
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Ism va Familiyangiz:</label>
-                        <input type="text" id="student-name" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm" placeholder="Masalan: Ali Valiyev">
+                        <input type="text" id="student-name" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="Masalan: Ali Valiyev">
                     </div>
-                    
-                    <div id="access-code-box" class="hidden">
-                        <label class="block text-xs font-bold text-slate-700 mb-1"><i class="fa-solid fa-key text-amber-500 mr-1"></i> Test Kirish Kodi:</label>
-                        <input type="password" id="student-access-code" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm" placeholder="Kodni kiriting">
-                    </div>
-
-                    <button onclick="startStudentQuiz()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition text-sm flex items-center justify-center mt-2">
-                        <i class="fa-solid fa-play mr-2"></i> Testni Boshlash
+                    <button onclick="startQuiz()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow transition mt-2">
+                        Testni boshlash <i class="fa-solid fa-arrow-right ml-1"></i>
                     </button>
                 </div>
+            </div>
+
+            <!-- JARAON BO'LIMI (SAVOLLAR) -->
+            <div id="quiz-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <span id="question-count" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">Savol: 1 / 0</span>
+                    <span id="timer" class="text-xs font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full"><i class="fa-regular fa-clock mr-1"></i> 00:00</span>
+                </div>
+                <div id="question-text" class="text-base font-semibold text-slate-800 py-2"></div>
+                <div id="options-container" class="space-y-2"></div>
+                <div class="pt-3 border-t flex justify-end">
+                    <button onclick="nextQuestion()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition">
+                        Keyingisi <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- NATIJA BO'LIMI -->
+            <div id="result-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center space-y-4 max-w-md mx-auto">
+                <i class="fa-solid fa-circle-check text-5xl text-emerald-500"></i>
+                <h2 class="text-2xl font-bold text-slate-800">Test Yakunlandi!</h2>
+                <div id="score-text" class="text-lg font-medium text-slate-700"></div>
+                <button onclick="location.reload()" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm shadow">
+                    Boshiga qaytish
+                </button>
             </div>
         </section>
 
-        <!-- TEST BO'LIMI -->
-        <section id="section-quiz" class="hidden">
-            <div id="quiz-card" class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <div class="flex flex-wrap justify-between items-center border-b pb-3 mb-4 gap-2">
-                    <span id="question-count" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
-                        Savol 1
-                    </span>
-
-                    <span id="timer-box" class="hidden text-xs font-bold text-rose-700 bg-rose-50 px-3 py-1 rounded-full border border-rose-200 flex items-center">
-                        <i class="fa-solid fa-stopwatch mr-1.5"></i> <span id="timer-display">00:00</span>
-                    </span>
-
-                    <span id="quiz-score" class="hidden text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
-                        Umumiy Ball: 0
-                    </span>
-                </div>
-
-                <h2 id="question-text" class="text-base font-bold text-slate-800 mb-4">
-                    Savollar yuklanmoqda...
+        <!-- REYTING BO'LIMI -->
+        <section id="section-leaderboard" class="hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-4">
+                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-amber-500"></i> Natijalar va Reyting
                 </h2>
-
-                <div id="question-image-container" class="hidden mb-4 text-center">
-                    <img id="question-image" src="" alt="Savol rasmi" class="max-h-64 mx-auto rounded-xl border border-slate-200 object-contain">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-emerald-50 text-emerald-800 font-bold uppercase text-xs">
+                            <tr>
+                                <th class="p-3">#</th>
+                                <th class="p-3">Ism va Familiya</th>
+                                <th class="p-3">Natija</th>
+                                <th class="p-3">Vaqt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body"></tbody>
+                    </table>
                 </div>
-
-                <div id="options-container" class="space-y-2.5"></div>
-
-                <div id="explanation-box" class="hidden mt-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs">
-                    <strong><i class="fa-solid fa-lightbulb mr-1"></i> Izoh:</strong>
-                    <p id="explanation-text" class="mt-1"></p>
-                </div>
-
-                <div class="mt-5 flex justify-end">
-                    <button id="next-btn" onclick="nextQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2 rounded-xl shadow transition text-sm">
-                        Keyingi savol <i class="fa-solid fa-arrow-right ml-1"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- RESULT CARD -->
-            <div id="result-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center">
-                <div id="result-icon-container" class="mb-3"></div>
-                <h2 id="result-title" class="text-xl font-bold text-slate-800 mb-1">Test Yakunlandi!</h2>
-                <p id="student-result-name" class="text-base font-bold text-emerald-800 mb-1"></p>
-                <p id="final-correct" class="text-sm text-slate-600 mb-2"></p>
-                <p id="final-time-spent" class="text-xs text-slate-500 mb-3"></p>
-                
-                <div id="score-result-box" class="my-3 p-4 bg-emerald-50 rounded-2xl border border-emerald-200 inline-block w-full max-w-xs">
-                    <span class="text-xs text-emerald-800 uppercase font-bold tracking-wider block">Siz to'plagan umumiy ball:</span>
-                    <span id="final-score" class="text-3xl font-extrabold text-emerald-700">0 Ball</span>
-                    <span id="pass-score-info" class="text-[11px] text-slate-500 block mt-1"></span>
-                </div>
-
-                <p id="result-feedback" class="text-sm font-semibold text-slate-700 mb-4 px-4"></p>
-
-                <div class="flex justify-center space-x-3">
-                    <button onclick="switchTab('leaderboard')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-5 py-2.5 rounded-xl shadow text-sm transition">
-                        <i class="fa-solid fa-trophy mr-1"></i> Reytingni ko'rish
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- REYTING (LEADERBOARD) BO'LIMI -->
-        <section id="section-leaderboard" class="hidden space-y-4">
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <h2 class="text-lg font-bold text-slate-800 mb-3 pb-2 border-b flex items-center justify-between">
-                    <span><i class="fa-solid fa-trophy text-amber-500 mr-2"></i> Test Natijalari va Reyting</span>
-                    <span class="text-xs font-normal text-slate-500">Eng yuqori ko'rsatkichlar</span>
-                </h2>
-
-                <div id="leaderboard-list" class="space-y-2"></div>
             </div>
         </section>
 
         <!-- ADMIN BO'LIMI -->
-        <section id="section-admin" class="hidden space-y-5">
-            <!-- SOZLAMALAR: SANALAR, VAQT VA KOD -->
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <h2 class="text-base font-bold text-slate-800 mb-3 pb-2 border-b flex items-center">
-                    <i class="fa-solid fa-sliders text-emerald-600 mr-2"></i> Test Sozlamalari
+        <section id="section-admin" class="hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-4">
+                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield text-emerald-600"></i> Admin Paneli
                 </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">📅 Test Boshlanish Kuni va Vaqti:</label>
-                        <div class="flex space-x-2">
-                            <input type="datetime-local" id="input-quiz-date" class="p-2 border border-slate-300 rounded-lg w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                            <button onclick="saveQuizDate()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg transition">Saqlash</button>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-1">Belgilanmagan bo'lsa test har doim ochiq bo'ladi.</p>
+                
+                <div class="space-y-3 border-b pb-4">
+                    <h3 class="font-bold text-sm text-slate-700">Yangi Savol Qo'shish</h3>
+                    <input type="text" id="new-q-text" placeholder="Savol matni" class="w-full p-2.5 border rounded-xl text-sm">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="opt-a" placeholder="A variant" class="p-2 border rounded-xl text-sm">
+                        <input type="text" id="opt-b" placeholder="B variant" class="p-2 border rounded-xl text-sm">
+                        <input type="text" id="opt-c" placeholder="C variant" class="p-2 border rounded-xl text-sm">
+                        <input type="text" id="opt-d" placeholder="D variant" class="p-2 border rounded-xl text-sm">
                     </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">⏱ Test Davomiyligi (daqiqada):</label>
-                        <div class="flex space-x-2">
-                            <input type="number" id="input-quiz-time" min="0" class="p-2 border border-slate-300 rounded-lg w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Masalan: 15">
-                            <button onclick="saveQuizTime()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg transition">Saqlash</button>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-1">0 qilinsa vaqt chegarasi bo'lmaydi.</p>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">🔐 Test Kirish Kodi (Ixtiyoriy):</label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="input-quiz-code" class="p-2 border border-slate-300 rounded-lg w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Masalan: 1234">
-                            <button onclick="saveQuizCode()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg transition">Saqlash</button>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-1">Bo'sh qoldirilsa kirish kodi so'ralmaydi.</p>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">🏆 Kubok uchun minimal ball:</label>
-                        <div class="flex space-x-2">
-                            <input type="number" id="input-passing-score" min="0" class="p-2 border border-slate-300 rounded-lg w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Masalan: 20">
-                            <button onclick="savePassingScore()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg transition">Saqlash</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SAVOL QO'SHISH -->
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <h2 class="text-base font-bold text-slate-800 mb-3 pb-2 border-b flex items-center">
-                    <i class="fa-solid fa-circle-plus text-emerald-600 mr-2"></i> Yangi savol kiritish
-                </h2>
-
-                <form id="add-question-form" onsubmit="saveQuestion(event)" class="space-y-3 text-xs">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Savol matni:</label>
-                        <textarea id="input-question" required rows="2" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Savol matnini kiriting..."></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Rasm havolasi (URL - Ixtiyoriy):</label>
-                        <input type="url" id="input-image" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="https://example.com/rasm.jpg">
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">A) Variant:</label>
-                            <input type="text" id="input-opt-0" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">B) Variant:</label>
-                            <input type="text" id="input-opt-1" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">C) Variant:</label>
-                            <input type="text" id="input-opt-2" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">D) Variant:</label>
-                            <input type="text" id="input-opt-3" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">To'g'ri javob:</label>
-                            <select id="input-correct" class="w-full p-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                                <option value="0">A varianti</option>
-                                <option value="1">B varianti</option>
-                                <option value="2">C varianti</option>
-                                <option value="3">D varianti</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Savol bali:</label>
-                            <input type="number" id="input-points" min="0" value="10" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Izoh (Ixtiyoriy):</label>
-                        <input type="text" id="input-explanation" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="O'quvchiga tushuntirish">
-                    </div>
-
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg shadow transition text-sm">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> Savolni Saqlash
+                    <select id="correct-opt" class="w-full p-2.5 border rounded-xl text-sm">
+                        <option value="0">To'g'ri javob: A</option>
+                        <option value="1">To'g'ri javob: B</option>
+                        <option value="2">To'g'ri javob: C</option>
+                        <option value="3">To'g'ri javob: D</option>
+                    </select>
+                    <button onclick="addQuestion()" class="w-full py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm shadow">
+                        Savolni saqlash
                     </button>
-                </form>
-            </div>
+                </div>
 
-            <!-- SAVOLLAR RO'YXATI -->
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <h2 class="text-base font-bold text-slate-800 mb-3 pb-2 border-b flex items-center justify-between">
-                    <span><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Savollar ro'yxati</span>
-                    <div class="space-x-1">
-                        <button onclick="clearLeaderboard()" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2.5 py-1 rounded-lg font-bold transition">
-                            Reytingni tozalash
-                        </button>
-                        <button onclick="clearAllQuestions()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-2.5 py-1 rounded-lg font-bold transition">
-                            Savollarni o'chirish
-                        </button>
-                    </div>
-                </h2>
-                <div id="admin-questions-list" class="space-y-2"></div>
+                <div class="pt-2 flex justify-between items-center">
+                    <span id="admin-q-count" class="text-xs font-bold text-slate-600">Jami savollar: 0 ta</span>
+                    <button onclick="clearAllData()" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-xl">
+                        Natijalarni tozalash
+                    </button>
+                </div>
             </div>
         </section>
     </main>
 
     <script>
+        // Welcome ekranni 1.2s da yopish
         setTimeout(() => {
-            const welcomeScreen = document.getElementById('welcome-screen');
-            if (welcomeScreen) welcomeScreen.classList.add('hidden');
-        }, 5000);
+            const w = document.getElementById('welcome-screen');
+            if(w) { w.style.opacity = '0'; setTimeout(() => w.style.display = 'none', 400); }
+        }, 1200);
 
-        const ADMIN_PASSWORD = "8888"; 
-
-        function checkAdminPassword() {
-            const pass = prompt("Admin panelga kirish uchun parolni kiriting:");
-            if (pass === ADMIN_PASSWORD) {
-                switchTab('admin');
-            } else if (pass !== null) {
-                alert("❌ Parol noto'g'ri!");
-            }
-        }
-
-        const defaultQuestions = [
-            {
-                question: "Odam genomi nechta juft xromosomadan tashkil topgan?",
-                image: "",
-                options: ["22 juft", "23 juft", "46 juft", "24 juft"],
-                correct: 1,
-                points: 10,
-                explanation: "Odam hujayrasida 23 juft xromosoma mavjud."
-            }
+        let questions = JSON.parse(localStorage.getItem('bio_questions')) || [
+            { text: "Hujayra nazariyasiga kim asos solgan?", options: ["Shleydan va Shvann", "R.Guk", "Latsenkos", "I.Pavlov"], correct: 0 },
+            { text: "Fotosintez jarayoni qaysi organoidda boradi?", options: ["MitoXondriya", "Xloroplast", "Ribosoma", "Lizosoma"], correct: 1 }
         ];
-
-        let questions = JSON.parse(localStorage.getItem('biolog_questions')) || defaultQuestions;
-        let passingScore = localStorage.getItem('biolog_passing_score') !== null ? parseInt(localStorage.getItem('biolog_passing_score')) : 20;
-        let quizTimeMinutes = localStorage.getItem('biolog_quiz_time') !== null ? parseInt(localStorage.getItem('biolog_quiz_time')) : 10;
-        let quizAccessCode = localStorage.getItem('biolog_quiz_code') || "";
-        let quizScheduledDate = localStorage.getItem('biolog_quiz_date') || "";
-        let leaderboard = JSON.parse(localStorage.getItem('biolog_leaderboard')) || [];
-
-        let currentStudentName = "";
-        let currentQIndex = 0;
-        let totalScore = 0;
-        let correctCount = 0;
-        let answered = false;
-        let timerInterval = null;
-        let startTimeMs = 0;
-
-        function checkQuizAvailability() {
-            const alertBox = document.getElementById('no-quiz-alert');
-            const subtext = document.getElementById('no-quiz-subtext');
-            const studentForm = document.getElementById('student-form-box');
-            const codeBox = document.getElementById('access-code-box');
-
-            let isQuizAvailable = true;
-            let reasonText = "";
-
-            // 1. Savollar mavjudligini tekshirish
-            if (!questions || questions.length === 0) {
-                isQuizAvailable = false;
-                reasonText = "Test savollari kiritilmagan.";
-            }
-
-            // 2. Sana va vaqt hali kelgan-kelmaganligini tekshirish
-            if (quizScheduledDate) {
-                const sched = new Date(quizScheduledDate);
-                const now = new Date();
-                if (sched > now) {
-                    isQuizAvailable = false;
-                    reasonText = `Test boshlanish kuni va vaqti: ${sched.toLocaleString('uz-UZ')}`;
-                }
-            }
-
-            if (!isQuizAvailable) {
-                alertBox.classList.remove('hidden');
-                subtext.innerText = reasonText;
-                studentForm.classList.add('hidden');
-            } else {
-                alertBox.classList.add('hidden');
-                studentForm.classList.remove('hidden');
-
-                if (quizAccessCode && quizAccessCode.trim() !== "") {
-                    codeBox.classList.remove('hidden');
-                } else {
-                    codeBox.classList.add('hidden');
-                }
-            }
-        }
-
-        function saveToStorage() {
-            localStorage.setItem('biolog_questions', JSON.stringify(questions));
-        }
-
-        function savePassingScore() {
-            const val = parseInt(document.getElementById('input-passing-score').value);
-            if (!isNaN(val) && val >= 0) {
-                passingScore = val;
-                localStorage.setItem('biolog_passing_score', passingScore);
-                alert("Minimal ball saqlandi!");
-            }
-        }
-
-        function saveQuizTime() {
-            const val = parseInt(document.getElementById('input-quiz-time').value);
-            if (!isNaN(val) && val >= 0) {
-                quizTimeMinutes = val;
-                localStorage.setItem('biolog_quiz_time', quizTimeMinutes);
-                alert(`Test vaqti ${quizTimeMinutes} daqiqa qilib saqlandi!`);
-            }
-        }
-
-        function saveQuizCode() {
-            quizAccessCode = document.getElementById('input-quiz-code').value.trim();
-            localStorage.setItem('biolog_quiz_code', quizAccessCode);
-            alert(quizAccessCode ? `Kirish kodi: ${quizAccessCode}` : "Kirish kodi olib tashlandi!");
-            checkQuizAvailability();
-        }
-
-        function saveQuizDate() {
-            quizScheduledDate = document.getElementById('input-quiz-date').value;
-            localStorage.setItem('biolog_quiz_date', quizScheduledDate);
-            alert(quizScheduledDate ? "Test kuni va vaqti saqlandi!" : "Test kuni olib tashlandi!");
-            checkQuizAvailability();
-        }
-
-        function startStudentQuiz() {
-            const name = document.getElementById('student-name').value.trim();
-            if (!name) {
-                alert("Iltimos, ism va familiyangizni kiriting!");
-                return;
-            }
-
-            if (quizAccessCode && quizAccessCode.trim() !== "") {
-                const inputCode = document.getElementById('student-access-code').value.trim();
-                if (inputCode !== quizAccessCode) {
-                    alert("❌ Test kirish kodi noto'g'ri!");
-                    return;
-                }
-            }
-
-            currentStudentName = name;
-            document.getElementById('section-start').classList.add('hidden');
-            document.getElementById('section-quiz').classList.remove('hidden');
-
-            currentQIndex = 0;
-            totalScore = 0;
-            correctCount = 0;
-            startTimeMs = Date.now();
-
-            renderQuestion();
-            startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            const timerBox = document.getElementById('timer-box');
-
-            if (quizTimeMinutes <= 0) {
-                timerBox.classList.add('hidden');
-                return;
-            }
-
-            timerBox.classList.remove('hidden');
-            const endTime = Date.now() + quizTimeMinutes * 60 * 1000;
-
-            timerInterval = setInterval(() => {
-                const now = Date.now();
-                const timeRemaining = Math.round((endTime - now) / 1000);
-
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    alert("⏰ Berilgan vaqt tugadi! Test yakunlanmoqda...");
-                    showResults();
-                    return;
-                }
-
-                const minutes = Math.floor(timeRemaining / 60);
-                const seconds = timeRemaining % 60;
-                document.getElementById('timer-display').innerText = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            }, 1000);
-        }
+        let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
+        
+        let currentQ = 0, score = 0, currentStudent = "", selectedOption = null;
 
         function switchTab(tab) {
-            const secStart = document.getElementById('section-start');
-            const secQuiz = document.getElementById('section-quiz');
-            const secLeaderboard = document.getElementById('section-leaderboard');
-            const secAdmin = document.getElementById('section-admin');
-
-            const tabQuiz = document.getElementById('tab-quiz');
-            const tabLeaderboard = document.getElementById('tab-leaderboard');
-            const tabAdmin = document.getElementById('tab-admin');
-
-            secStart.classList.add('hidden');
-            secQuiz.classList.add('hidden');
-            secLeaderboard.classList.add('hidden');
-            secAdmin.classList.add('hidden');
-
-            tabQuiz.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition";
-            tabLeaderboard.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition";
-            tabAdmin.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition";
-
-            if (tab === 'quiz') {
-                secStart.classList.remove('hidden');
-                tabQuiz.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow";
-                checkQuizAvailability();
-            } else if (tab === 'leaderboard') {
-                secLeaderboard.classList.remove('hidden');
-                tabLeaderboard.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow";
-                renderLeaderboard();
-            } else {
-                secAdmin.classList.remove('hidden');
-                tabAdmin.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow";
-                document.getElementById('input-passing-score').value = passingScore;
-                document.getElementById('input-quiz-time').value = quizTimeMinutes;
-                document.getElementById('input-quiz-code').value = quizAccessCode;
-                document.getElementById('input-quiz-date').value = quizScheduledDate;
-                renderAdminList();
-            }
+            ['quiz', 'leaderboard', 'admin'].forEach(t => {
+                document.getElementById('section-' + t).classList.add('hidden');
+                document.getElementById('tab-' + t).classList.remove('bg-white', 'text-emerald-800', 'shadow');
+                document.getElementById('tab-' + t).classList.add('hover:bg-emerald-600');
+            });
+            document.getElementById('section-' + tab).classList.remove('hidden');
+            document.getElementById('tab-' + tab).classList.add('bg-white', 'text-emerald-800', 'shadow');
+            
+            if(tab === 'leaderboard') renderLeaderboard();
+            if(tab === 'admin') updateAdminInfo();
         }
 
-        function renderQuestion() {
-            const scoreBox = document.getElementById('quiz-score');
-            if (passingScore > 0) scoreBox.classList.remove('hidden'); else scoreBox.classList.add('hidden');
-
-            if (questions.length === 0) {
-                document.getElementById('question-text').innerText = "Hozircha savollar mavjud emas.";
-                document.getElementById('options-container').innerHTML = "";
-                return;
-            }
-
-            const q = questions[currentQIndex];
-            document.getElementById('question-count').innerText = `Savol ${currentQIndex + 1} / ${questions.length}`;
-            document.getElementById('question-text').innerText = q.question;
+        function startQuiz() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            if(!nameInput) { alert("Iltimos, ismingizni kiriting!"); return; }
+            if(questions.length === 0) { alert("Hozircha savollar yo'q!"); return; }
             
-            const imgContainer = document.getElementById('question-image-container');
-            const imgElement = document.getElementById('question-image');
-            if (q.image && q.image.trim() !== '') {
-                imgElement.src = q.image;
-                imgContainer.classList.remove('hidden');
-            } else {
-                imgContainer.classList.add('hidden');
-            }
+            currentStudent = nameInput;
+            currentQ = 0; score = 0;
+            document.getElementById('start-card').classList.add('hidden');
+            document.getElementById('quiz-card').classList.remove('hidden');
+            showQuestion();
+        }
 
-            document.getElementById('explanation-box').classList.add('hidden');
-            document.getElementById('next-btn').classList.add('hidden');
-            answered = false;
-
-            const optsDiv = document.getElementById('options-container');
-            optsDiv.innerHTML = '';
-
+        function showQuestion() {
+            selectedOption = null;
+            const q = questions[currentQ];
+            document.getElementById('question-count').innerText = `Savol: ${currentQ + 1} / ${questions.length}`;
+            document.getElementById('question-text').innerText = q.text;
+            
+            const optsBox = document.getElementById('options-container');
+            optsBox.innerHTML = '';
             q.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex items-center justify-between text-xs md:text-sm font-medium";
-                btn.innerHTML = `<span><strong class="mr-2">${String.fromCharCode(65 + idx)})</strong> ${opt}</span>`;
-                btn.onclick = () => selectOption(idx, btn);
-                optsDiv.appendChild(btn);
+                btn.className = "w-full text-left p-3 border rounded-xl text-sm transition hover:bg-emerald-50";
+                btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
+                btn.onclick = () => {
+                    Array.from(optsBox.children).forEach(c => c.classList.remove('border-emerald-600', 'bg-emerald-100', 'font-bold'));
+                    btn.classList.add('border-emerald-600', 'bg-emerald-100', 'font-bold');
+                    selectedOption = idx;
+                };
+                optsBox.appendChild(btn);
             });
-        }
-
-        function selectOption(selectedIdx, element) {
-            if (answered) return;
-            answered = true;
-
-            const q = questions[currentQIndex];
-            const qPoints = parseInt(q.points) || 10;
-            const buttons = document.getElementById('options-container').querySelectorAll('button');
-
-            if (selectedIdx === q.correct) {
-                element.className = "w-full text-left p-3 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-900 font-bold text-xs md:text-sm";
-                totalScore += qPoints;
-                correctCount++;
-                document.getElementById('quiz-score').innerText = `Umumiy Ball: ${totalScore}`;
-            } else {
-                element.className = "w-full text-left p-3 rounded-xl border-2 border-rose-500 bg-rose-100 text-rose-900 font-bold text-xs md:text-sm";
-                buttons[q.correct].className = "w-full text-left p-3 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-900 font-bold text-xs md:text-sm";
-            }
-
-            if (q.explanation) {
-                document.getElementById('explanation-text').innerText = q.explanation;
-                document.getElementById('explanation-box').classList.remove('hidden');
-            }
-
-            document.getElementById('next-btn').classList.remove('hidden');
         }
 
         function nextQuestion() {
-            currentQIndex++;
-            if (currentQIndex < questions.length) {
-                renderQuestion();
+            if(selectedOption === null) { alert("Javob tanlang!"); return; }
+            if(selectedOption === questions[currentQ].correct) score++;
+            
+            currentQ++;
+            if(currentQ < questions.length) {
+                showQuestion();
             } else {
-                showResults();
+                finishQuiz();
             }
         }
 
-        function showResults() {
-            clearInterval(timerInterval);
-            
-            const timeSpentSec = Math.round((Date.now() - startTimeMs) / 1000);
-            const minSpent = Math.floor(timeSpentSec / 60);
-            const secSpent = timeSpentSec % 60;
-            const timeSpentStr = `${minSpent} daqiqa ${secSpent} soniya`;
-
-            const resultData = {
-                name: currentStudentName,
-                score: totalScore,
-                correct: correctCount,
-                totalQ: questions.length,
-                timeSpentSec: timeSpentSec,
-                timeSpentStr: timeSpentStr,
-                date: new Date().toLocaleDateString('uz-UZ')
-            };
-
-            leaderboard.push(resultData);
-            leaderboard.sort((a, b) => b.score - a.score || a.timeSpentSec - b.timeSpentSec);
-            localStorage.setItem('biolog_leaderboard', JSON.stringify(leaderboard));
-
+        function finishQuiz() {
             document.getElementById('quiz-card').classList.add('hidden');
             document.getElementById('result-card').classList.remove('hidden');
-            document.getElementById('student-result-name').innerText = `O'quvchi: ${currentStudentName}`;
-            document.getElementById('final-correct').innerText = `${questions.length} ta savoldan ${correctCount} tasiga to'g'ri javob berdingiz.`;
-            document.getElementById('final-time-spent').innerText = `⏱ Ketgan vaqt: ${timeSpentStr}`;
-
-            const iconContainer = document.getElementById('result-icon-container');
-            const titleElement = document.getElementById('result-title');
-            const feedbackElement = document.getElementById('result-feedback');
-
-            if (passingScore > 0) {
-                document.getElementById('final-score').innerText = `${totalScore} Ball`;
-                document.getElementById('pass-score-info').innerText = `(O'tish bali: ${passingScore} ball)`;
-
-                if (totalScore >= passingScore) {
-                    iconContainer.innerHTML = '<i class="fa-solid fa-trophy text-6xl text-amber-500 animate-bounce"></i>';
-                    titleElement.innerText = "Ajoyib Natija! 🎉";
-                    feedbackElement.innerText = "Tabriklaymiz! Siz reytingda yuqori o'rin egalladingiz!";
-                    feedbackElement.className = "text-sm font-bold text-emerald-700 mb-4 px-4";
-                } else {
-                    iconContainer.innerHTML = '<i class="fa-solid fa-medal text-6xl text-yellow-500"></i>';
-                    titleElement.innerText = "Yaxshi Harakat! 👏";
-                    feedbackElement.innerText = "Yana biroz tayyorgarlik ko'rsangiz kubok sizniki bo'ladi!";
-                    feedbackElement.className = "text-sm font-bold text-amber-600 mb-4 px-4";
-                }
-            } else {
-                document.getElementById('final-score').innerText = `${correctCount} ta to'g'ri`;
-                iconContainer.innerHTML = '<i class="fa-solid fa-star text-6xl text-amber-400"></i>';
-                titleElement.innerText = "Test Yakunlandi! 🌟";
-                feedbackElement.innerText = "Natijangiz reytingga muvaffaqiyatli qo'shildi.";
-            }
+            document.getElementById('score-text').innerHTML = `Hurmatli <b>${currentStudent}</b>,<br>Siz ${questions.length} ta savoldan <b>${score} ta</b>siga to'g'ri javob berdingiz!`;
+            
+            leaderboard.push({ name: currentStudent, score: score, total: questions.length, time: new Date().toLocaleTimeString().slice(0,5) });
+            localStorage.setItem('bio_leaderboard', JSON.stringify(leaderboard));
         }
 
         function renderLeaderboard() {
-            const listDiv = document.getElementById('leaderboard-list');
-            listDiv.innerHTML = '';
-
-            if (leaderboard.length === 0) {
-                listDiv.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-4">Hozircha hech kim test topshirmadi.</p>';
-                return;
-            }
-
-            leaderboard.forEach((item, index) => {
-                const rank = index + 1;
-                let rankBadge = `<span class="w-6 h-6 flex items-center justify-center font-bold text-xs rounded-full bg-slate-100 text-slate-700 mr-3">${rank}</span>`;
-                let bgStyle = "bg-white border-slate-200";
-
-                if (rank === 1) {
-                    rankBadge = `<span class="w-7 h-7 flex items-center justify-center font-bold text-sm rounded-full bg-amber-400 text-white shadow mr-3"><i class="fa-solid fa-crown text-amber-100"></i></span>`;
-                    bgStyle = "bg-amber-50/60 border-amber-300";
-                } else if (rank === 2) {
-                    rankBadge = `<span class="w-6 h-6 flex items-center justify-center font-bold text-xs rounded-full bg-slate-300 text-slate-800 mr-3">2</span>`;
-                } else if (rank === 3) {
-                    rankBadge = `<span class="w-6 h-6 flex items-center justify-center font-bold text-xs rounded-full bg-amber-700 text-white mr-3">3</span>`;
-                }
-
-                const row = document.createElement('div');
-                row.className = `flex items-center justify-between p-3 rounded-xl border ${bgStyle} transition text-xs`;
-                row.innerHTML = `
-                    <div class="flex items-center truncate mr-2">
-                        ${rankBadge}
-                        <div>
-                            <p class="font-bold text-slate-800">${item.name}</p>
-                            <p class="text-[10px] text-slate-500"><i class="fa-solid fa-clock mr-1"></i>${item.timeSpentStr} • ${item.date}</p>
-                        </div>
-                    </div>
-                    <div class="text-right flex-shrink-0">
-                        <span class="text-sm font-extrabold text-emerald-700 block">${item.score} Ball</span>
-                        <span class="text-[10px] text-slate-500">${item.correct}/${item.totalQ} to'g'ri</span>
-                    </div>
+            const body = document.getElementById('leaderboard-body');
+            body.innerHTML = '';
+            leaderboard.sort((a,b) => b.score - a.score).forEach((item, i) => {
+                body.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-3 font-bold">${i+1}</td>
+                        <td class="p-3">${item.name}</td>
+                        <td class="p-3 font-bold text-emerald-600">${item.score} / ${item.total}</td>
+                        <td class="p-3 text-xs text-slate-400">${item.time}</td>
+                    </tr>
                 `;
-                listDiv.appendChild(row);
             });
         }
-
-        function clearLeaderboard() {
-            if (confirm("Barcha reyting natijalarini tozalab tashlaysizmi?")) {
-                leaderboard = [];
-                localStorage.removeItem('biolog_leaderboard');
-                renderLeaderboard();
-                alert("Reyting tozalandi!");
-            }
-        }
-
-        function saveQuestion(e) {
-            e.preventDefault();
-            const newQ = {
-                question: document.getElementById('input-question').value,
-                image: document.getElementById('input-image').value,
-                options: [
-                    document.getElementById('input-opt-0').value,
-                    document.getElementById('input-opt-1').value,
-                    document.getElementById('input-opt-2').value,
-                    document.getElementById('input-opt-3').value
-                ],
-                correct: parseInt(document.getElementById('input-correct').value),
-                points: parseInt(document.getElementById('input-points').value) || 0,
-                explanation: document.getElementById('input-explanation').value
-            };
-
-            questions.push(newQ);
-            saveToStorage();
-
-            alert("Savol saqlandi!");
-            document.getElementById('add-question-form').reset();
-            renderAdminList();
-            checkQuizAvailability();
-        }
-
-        function renderAdminList() {
-            const listDiv = document.getElementById('admin-questions-list');
-            listDiv.innerHTML = '';
-
-            if (questions.length === 0) {
-                listDiv.innerHTML = '<p class="text-xs text-slate-500 italic">Savollar ro\'yxati bo\'sh.</p>';
-                return;
-            }
-
-            questions.forEach((q, index) => {
-                const item = document.createElement('div');
-                item.className = "flex items-center justify-between p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition text-xs";
-                item.innerHTML = `
-                    <div class="truncate mr-2">
-                        <span class="font-bold text-emerald-700 mr-1">${index + 1}.</span>
-                        <span class="font-medium text-slate-800">${q.question}</span>
-                    </div>
-                    <button onclick="deleteQuestion(${index})" class="text-rose-600 hover:bg-rose-50 p-1.5 rounded font-semibold transition flex-shrink-0">
-                        <i class="fa-solid fa-trash mr-1"></i> O'chirish
-                    </button>
-                `;
-                listDiv.appendChild(item);
-            });
-        }
-
-        function deleteQuestion(index) {
-            if (confirm("Ushbu savolni o'chirasizmi?")) {
-                questions.splice(index, 1);
-                saveToStorage();
-                renderAdminList();
-                checkQuizAvailability();
-            }
-        }
-
-        function clearAllQuestions() {
-            if (confirm("Barcha savollarni o'chirasizmi?")) {
-                questions = [];
-                saveToStorage();
-                renderAdminList();
-                checkQuizAvailability();
-            }
-        }
-
-        checkQuizAvailability();
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biolog o'quvchi — Onlayn Test Platformasi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @keyframes fadeIn { 
-            0% { opacity: 0; transform: translateY(20px); } 
-            20% { opacity: 1; transform: translateY(0); }
-            80% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); }
-        }
-        .welcome-anim { animation: fadeIn 5s ease-in-out forwards; }
-    </style>
-</head>
-<body class="bg-emerald-50 min-h-screen text-slate-800 font-sans">
-
-    <!-- WELCOME SCREEN (5 soniyalik Animatsiya) -->
-    <div id="welcome-screen" class="fixed inset-0 bg-emerald-700 flex flex-col items-center justify-center text-white z-[100] p-6 text-center">
-        <div class="welcome-anim space-y-4 max-w-md">
-            <i class="fa-solid fa-kaaba text-4xl text-amber-300 mb-2"></i>
-            <h1 class="text-2xl md:text-3xl font-bold tracking-wide">Assalomu alaykum!</h1>
-            <p class="text-xl md:text-2xl font-serif italic text-emerald-100">Bismillahir Rohmanir Rohiym</p>
-            <div class="pt-2">
-                <span class="inline-block bg-white text-emerald-800 text-sm md:text-base font-bold px-6 py-2.5 rounded-full shadow-lg border border-emerald-100">
-                    ✨ Testda omad yor bo'lsin!
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- HEADER -->
-    <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-leaf text-xl text-amber-300"></i>
-                <h1 class="text-lg font-bold tracking-wide">Biolog o'quvchi</h1>
-            </div>
-            <nav class="flex space-x-1 sm:space-x-2">
-                <button onclick="switchTab('quiz')" id="tab-quiz" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow">
-                    <i class="fa-solid fa-pen-to-square mr-1"></i> Test
-                </button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition">
-                    <i class="fa-solid fa-trophy mr-1"></i> Reyting
-                </button>
-                <button onclick="checkAdminPassword()" id="tab-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition">
-                    <i class="fa-solid fa-lock mr-1"></i> Admin
-                </button>
-            </nav>
-        </div>
-    </header>
-
-    <main class="max-w-2xl mx-auto p-4 mt-2">
-
-        <!-- KIRISH VA RO'YXATDAN O'TISH KARTASI -->
-        <section id="section-start" class="block">
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center max-w-md mx-auto space-y-4">
-                <i class="fa-solid fa-user-pen text-4xl text-emerald-600 mb-1"></i>
-                <h2 class="text-xl font-bold text-slate-800">Testga xush kelibsiz!</h2>
-                
-                <!-- TEST MAVJUD BO'LMAGANDA CHIQADIGAN XABAR -->
-                <div id="no-quiz-alert" class="hidden p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800 text-sm font-bold space-y-1">
-                    <i class="fa-solid fa-circle-exclamation text-rose-500 text-3xl mb-1 block"></i>
-                    <p class="text-base">Afsuski, hozirda test jarayoni bo'lmayapti.</p>
-                    <p id="no-quiz-subtext" class="text-xs font-medium text-rose-600 mt-1"></p>
-                </div>
-
-                <!-- TEST MAVJUD BO'LGANDA CHIQADIGAN SHAKL -->
-                <div id="student-form-box" class="space-y-3 text-left pt-2">
-                    <p class="text-xs text-slate-600 text-center">Testni boshlash uchun ismingizni kiritib tugmani bosing.</p>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Ism va Familiyangiz:</label>
-                        <input type="text" id="student-name" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm" placeholder="Masalan: Ali Valiyev">
-                    </div>
-                    
-                    <div id="access-code-box" class="hidden">
-                        <label class="block text-xs font-bold text-slate-700 mb-1"><i class="fa-solid fa-key text-amber-500 mr-1"></i> Test Kirish Kodi:</label>
-                        <input type="password" id="student-access-code" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm" placeholder="Kodni kiriting">
-                    </div>
-
-                    <button onclick="startStudentQuiz()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition text-sm flex items-center justify-center mt-2">
-                        <i class="fa-solid fa-play mr-2"></i> Testni Boshlash
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- TEST BO'LIMI -->
-        <section id="section-quiz" class="hidden">
-            <div id="quiz-card" class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <div class="flex flex-wrap justify-between items-center border-b pb-3 mb-4 gap-2">
-                    <span id="question-count" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
-                        Savol 1
-                    </span>
-
-                    <span id="timer-box" class="hidden text-xs font-bold text-rose-700 bg-rose-50 px-3 py-1 rounded-full border border-rose-200 flex items-center">
-                        <i class="fa-solid fa-stopwatch mr-1.5"></i> <span id="timer-display">00:00</span>
-                    </span>
-
-                    <span id="quiz-score" class="hidden text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
-                        Umumiy Ball: 0
-                    </span>
-                </div>
-
-                <h2 id="question-text" class="text-base font-bold text-slate-800 mb-4">
-                    Savollar yuklanmoqda...
-                </h2>
-
-                <div id="question-image-container" class="hidden mb-4 text-center">
-                    <img id="question-image" src="" alt="Savol rasmi" class="max-h-64 mx-auto rounded-xl border border-slate-200 object-contain">
-                </div>
-
-                <div id="options-container" class="space-y-2.5"></div>
-
-                <div id="explanation-box" class="hidden mt-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs">
-                    <strong><i class="fa-solid fa-lightbulb mr-1"></i> Izoh:</strong>
-                    <p id="explanation-text" class="mt-1"></p>
-                </div>
-
-                <div class="mt-5 flex justify-end">
-                    <button id="next-btn" onclick="nextQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2 rounded-xl shadow transition text-sm">
-                        Keyingi savol <i class="fa-solid fa-arrow-right ml-1"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- RESULT CARD -->
-            <div id="result-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center">
-                <div id="result-icon-container" class="mb-3"></div>
-                <h2 id="result-title" class="text-xl font-bold text-slate-800 mb-1">Test Yakunlandi!</h2>
-                <p id="student-result-name" class="text-base font-bold text-emerald-800 mb-1"></p>
-                <p id="final-correct" class="text-sm text-slate-600 mb-2"></p>
-                <p id="final-time-spent" class="text-xs text-slate-500 mb-3"></p>
-                
-                <div id="score-result-box" class="my-3 p-4 bg-emerald-50 rounded-2xl border border-emerald-200 inline-block w-full max-w-xs">
-                    <span class="text-xs text-emerald-800 uppercase font-bold tracking-wider block">Siz to'plagan umumiy ball:</span>
-                    <span id="final-score" class="text-3xl font-extrabold text-emerald-700">0 Ball</span>
-                    <span id="pass-score-info" class="text-[11px] text-slate-500 block mt-1"></span>
-                </div>
-
-                <p id="result-feedback" class="text-sm font-semibold text-slate-700 mb-4 px-4"></p>
-
-                <div class="flex justify-center space-x-3">
-                    <button onclick="switchTab('leaderboard')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-5 py-2.5 rounded-xl shadow text-sm transition">
-                        <i class="fa-solid fa-trophy mr-1"></i> Reytingni ko'rish
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- REYTING (LEADERBOARD) BO'LIMI -->
-        <section id="section-leaderboard" class="hidden space-y-4">
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <h2 class="text-lg font-bold text-slate-800 mb-3 pb-2 border-b flex items-center justify-between">
-                    <span><i class="fa-solid fa-trophy text-amber-500 mr-2"></i> Test Natijalari va Reyting</span>
-                    <span class="text-xs font-normal text-slate-500">Eng yuqori ko'rsatkichlar</span>
-                </h2>
-
-                <div id="leaderboard-list" class="space-y-2"></div>
-            </div>
-        </section>
-
-        <!-- ADMIN BO'LIMI -->
-        <section id="section-admin" class="hidden space-y-5">
-            <!-- SOZLAMALAR: SANALAR, VAQT VA KOD -->
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <h2 class="text-base font-bold text-slate-800 mb-3 pb-2 border-b flex items-center">
-                    <i class="fa-solid fa-sliders text-emerald-600 mr-2"></i> Test Sozlamalari
-                </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">📅 Test Boshlanish Kuni va Vaqti:</label>
-                        <div class="flex space-x-2">
-                            <input type="datetime-local" id="input-quiz-date" class="p-2 border border-slate-300 rounded-lg w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                            <button onclick="saveQuizDate()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg transition">Saqlash</button>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-1">Belgilanmagan bo'lsa test har doim ochiq bo'ladi.</p>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">⏱ Test Davomiyligi (daqiqada):</label>
-                        <div class="flex space-x-2">
-                            <input type="number" id="input-quiz-time" min="0" class="p-2 border border-slate-300 rounded-lg w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Masalan: 15">
-                            <button onclick="saveQuizTime()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg transition">Saqlash</button>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-1">0 qilinsa vaqt chegarasi bo'lmaydi.</p>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">🔐 Test Kirish Kodi (Ixtiyoriy):</label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="input-quiz-code" class="p-2 border border-slate-300 rounded-lg w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Masalan: 1234">
-                            <button onclick="saveQuizCode()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg transition">Saqlash</button>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-1">Bo'sh qoldirilsa kirish kodi so'ralmaydi.</p>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">🏆 Kubok uchun minimal ball:</label>
-                        <div class="flex space-x-2">
-                            <input type="number" id="input-passing-score" min="0" class="p-2 border border-slate-300 rounded-lg w-full focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Masalan: 20">
-                            <button onclick="savePassingScore()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg transition">Saqlash</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SAVOL QO'SHISH -->
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <h2 class="text-base font-bold text-slate-800 mb-3 pb-2 border-b flex items-center">
-                    <i class="fa-solid fa-circle-plus text-emerald-600 mr-2"></i> Yangi savol kiritish
-                </h2>
-
-                <form id="add-question-form" onsubmit="saveQuestion(event)" class="space-y-3 text-xs">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Savol matni:</label>
-                        <textarea id="input-question" required rows="2" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Savol matnini kiriting..."></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Rasm havolasi (URL - Ixtiyoriy):</label>
-                        <input type="url" id="input-image" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="https://example.com/rasm.jpg">
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">A) Variant:</label>
-                            <input type="text" id="input-opt-0" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">B) Variant:</label>
-                            <input type="text" id="input-opt-1" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">C) Variant:</label>
-                            <input type="text" id="input-opt-2" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">D) Variant:</label>
-                            <input type="text" id="input-opt-3" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">To'g'ri javob:</label>
-                            <select id="input-correct" class="w-full p-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                                <option value="0">A varianti</option>
-                                <option value="1">B varianti</option>
-                                <option value="2">C varianti</option>
-                                <option value="3">D varianti</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Savol bali:</label>
-                            <input type="number" id="input-points" min="0" value="10" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Izoh (Ixtiyoriy):</label>
-                        <input type="text" id="input-explanation" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="O'quvchiga tushuntirish">
-                    </div>
-
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg shadow transition text-sm">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> Savolni Saqlash
-                    </button>
-                </form>
-            </div>
-
-            <!-- SAVOLLAR RO'YXATI -->
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-5">
-                <h2 class="text-base font-bold text-slate-800 mb-3 pb-2 border-b flex items-center justify-between">
-                    <span><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Savollar ro'yxati</span>
-                    <div class="space-x-1">
-                        <button onclick="clearLeaderboard()" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2.5 py-1 rounded-lg font-bold transition">
-                            Reytingni tozalash
-                        </button>
-                        <button onclick="clearAllQuestions()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-2.5 py-1 rounded-lg font-bold transition">
-                            Savollarni o'chirish
-                        </button>
-                    </div>
-                </h2>
-                <div id="admin-questions-list" class="space-y-2"></div>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        setTimeout(() => {
-            const welcomeScreen = document.getElementById('welcome-screen');
-            if (welcomeScreen) welcomeScreen.classList.add('hidden');
-        }, 5000);
-
-        const ADMIN_PASSWORD = "8888"; 
 
         function checkAdminPassword() {
-            const pass = prompt("Admin panelga kirish uchun parolni kiriting:");
-            if (pass === ADMIN_PASSWORD) {
+            const pass = prompt("Admin parolini kiriting:");
+            if(pass === "8888") {
                 switchTab('admin');
-            } else if (pass !== null) {
-                alert("❌ Parol noto'g'ri!");
+            } else if(pass !== null) {
+                alert("Parol noto'g'ri!");
             }
         }
 
-        const defaultQuestions = [
-            {
-                question: "Odam genomi nechta juft xromosomadan tashkil topgan?",
-                image: "",
-                options: ["22 juft", "23 juft", "46 juft", "24 juft"],
-                correct: 1,
-                points: 10,
-                explanation: "Odam hujayrasida 23 juft xromosoma mavjud."
-            }
-        ];
+        function addQuestion() {
+            const text = document.getElementById('new-q-text').value.trim();
+            const a = document.getElementById('opt-a').value.trim();
+            const b = document.getElementById('opt-b').value.trim();
+            const c = document.getElementById('opt-c').value.trim();
+            const d = document.getElementById('opt-d').value.trim();
+            const correct = parseInt(document.getElementById('correct-opt').value);
 
-        let questions = JSON.parse(localStorage.getItem('biolog_questions')) || defaultQuestions;
-        let passingScore = localStorage.getItem('biolog_passing_score') !== null ? parseInt(localStorage.getItem('biolog_passing_score')) : 20;
-        let quizTimeMinutes = localStorage.getItem('biolog_quiz_time') !== null ? parseInt(localStorage.getItem('biolog_quiz_time')) : 10;
-        let quizAccessCode = localStorage.getItem('biolog_quiz_code') || "";
-        let quizScheduledDate = localStorage.getItem('biolog_quiz_date') || "";
-        let leaderboard = JSON.parse(localStorage.getItem('biolog_leaderboard')) || [];
+            if(!text || !a || !b || !c || !d) { alert("Barcha maydonlarni to'ldiring!"); return; }
 
-        let currentStudentName = "";
-        let currentQIndex = 0;
-        let totalScore = 0;
-        let correctCount = 0;
-        let answered = false;
-        let timerInterval = null;
-        let startTimeMs = 0;
-
-        function checkQuizAvailability() {
-            const alertBox = document.getElementById('no-quiz-alert');
-            const subtext = document.getElementById('no-quiz-subtext');
-            const studentForm = document.getElementById('student-form-box');
-            const codeBox = document.getElementById('access-code-box');
-
-            let isQuizAvailable = true;
-            let reasonText = "";
-
-            // 1. Savollar mavjudligini tekshirish
-            if (!questions || questions.length === 0) {
-                isQuizAvailable = false;
-                reasonText = "Test savollari kiritilmagan.";
-            }
-
-            // 2. Sana va vaqt hali kelgan-kelmaganligini tekshirish
-            if (quizScheduledDate) {
-                const sched = new Date(quizScheduledDate);
-                const now = new Date();
-                if (sched > now) {
-                    isQuizAvailable = false;
-                    reasonText = `Test boshlanish kuni va vaqti: ${sched.toLocaleString('uz-UZ')}`;
-                }
-            }
-
-            if (!isQuizAvailable) {
-                alertBox.classList.remove('hidden');
-                subtext.innerText = reasonText;
-                studentForm.classList.add('hidden');
-            } else {
-                alertBox.classList.add('hidden');
-                studentForm.classList.remove('hidden');
-
-                if (quizAccessCode && quizAccessCode.trim() !== "") {
-                    codeBox.classList.remove('hidden');
-                } else {
-                    codeBox.classList.add('hidden');
-                }
-            }
-        }
-
-        function saveToStorage() {
-            localStorage.setItem('biolog_questions', JSON.stringify(questions));
-        }
-
-        function savePassingScore() {
-            const val = parseInt(document.getElementById('input-passing-score').value);
-            if (!isNaN(val) && val >= 0) {
-                passingScore = val;
-                localStorage.setItem('biolog_passing_score', passingScore);
-                alert("Minimal ball saqlandi!");
-            }
-        }
-
-        function saveQuizTime() {
-            const val = parseInt(document.getElementById('input-quiz-time').value);
-            if (!isNaN(val) && val >= 0) {
-                quizTimeMinutes = val;
-                localStorage.setItem('biolog_quiz_time', quizTimeMinutes);
-                alert(`Test vaqti ${quizTimeMinutes} daqiqa qilib saqlandi!`);
-            }
-        }
-
-        function saveQuizCode() {
-            quizAccessCode = document.getElementById('input-quiz-code').value.trim();
-            localStorage.setItem('biolog_quiz_code', quizAccessCode);
-            alert(quizAccessCode ? `Kirish kodi: ${quizAccessCode}` : "Kirish kodi olib tashlandi!");
-            checkQuizAvailability();
-        }
-
-        function saveQuizDate() {
-            quizScheduledDate = document.getElementById('input-quiz-date').value;
-            localStorage.setItem('biolog_quiz_date', quizScheduledDate);
-            alert(quizScheduledDate ? "Test kuni va vaqti saqlandi!" : "Test kuni olib tashlandi!");
-            checkQuizAvailability();
-        }
-
-        function startStudentQuiz() {
-            const name = document.getElementById('student-name').value.trim();
-            if (!name) {
-                alert("Iltimos, ism va familiyangizni kiriting!");
-                return;
-            }
-
-            if (quizAccessCode && quizAccessCode.trim() !== "") {
-                const inputCode = document.getElementById('student-access-code').value.trim();
-                if (inputCode !== quizAccessCode) {
-                    alert("❌ Test kirish kodi noto'g'ri!");
-                    return;
-                }
-            }
-
-            currentStudentName = name;
-            document.getElementById('section-start').classList.add('hidden');
-            document.getElementById('section-quiz').classList.remove('hidden');
-
-            currentQIndex = 0;
-            totalScore = 0;
-            correctCount = 0;
-            startTimeMs = Date.now();
-
-            renderQuestion();
-            startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            const timerBox = document.getElementById('timer-box');
-
-            if (quizTimeMinutes <= 0) {
-                timerBox.classList.add('hidden');
-                return;
-            }
-
-            timerBox.classList.remove('hidden');
-            const endTime = Date.now() + quizTimeMinutes * 60 * 1000;
-
-            timerInterval = setInterval(() => {
-                const now = Date.now();
-                const timeRemaining = Math.round((endTime - now) / 1000);
-
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    alert("⏰ Berilgan vaqt tugadi! Test yakunlanmoqda...");
-                    showResults();
-                    return;
-                }
-
-                const minutes = Math.floor(timeRemaining / 60);
-                const seconds = timeRemaining % 60;
-                document.getElementById('timer-display').innerText = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            }, 1000);
-        }
-
-        function switchTab(tab) {
-            const secStart = document.getElementById('section-start');
-            const secQuiz = document.getElementById('section-quiz');
-            const secLeaderboard = document.getElementById('section-leaderboard');
-            const secAdmin = document.getElementById('section-admin');
-
-            const tabQuiz = document.getElementById('tab-quiz');
-            const tabLeaderboard = document.getElementById('tab-leaderboard');
-            const tabAdmin = document.getElementById('tab-admin');
-
-            secStart.classList.add('hidden');
-            secQuiz.classList.add('hidden');
-            secLeaderboard.classList.add('hidden');
-            secAdmin.classList.add('hidden');
-
-            tabQuiz.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition";
-            tabLeaderboard.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition";
-            tabAdmin.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600 text-white transition";
-
-            if (tab === 'quiz') {
-                secStart.classList.remove('hidden');
-                tabQuiz.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow";
-                checkQuizAvailability();
-            } else if (tab === 'leaderboard') {
-                secLeaderboard.classList.remove('hidden');
-                tabLeaderboard.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow";
-                renderLeaderboard();
-            } else {
-                secAdmin.classList.remove('hidden');
-                tabAdmin.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow";
-                document.getElementById('input-passing-score').value = passingScore;
-                document.getElementById('input-quiz-time').value = quizTimeMinutes;
-                document.getElementById('input-quiz-code').value = quizAccessCode;
-                document.getElementById('input-quiz-date').value = quizScheduledDate;
-                renderAdminList();
-            }
-        }
-
-        function renderQuestion() {
-            const scoreBox = document.getElementById('quiz-score');
-            if (passingScore > 0) scoreBox.classList.remove('hidden'); else scoreBox.classList.add('hidden');
-
-            if (questions.length === 0) {
-                document.getElementById('question-text').innerText = "Hozircha savollar mavjud emas.";
-                document.getElementById('options-container').innerHTML = "";
-                return;
-            }
-
-            const q = questions[currentQIndex];
-            document.getElementById('question-count').innerText = `Savol ${currentQIndex + 1} / ${questions.length}`;
-            document.getElementById('question-text').innerText = q.question;
+            questions.push({ text: text, options: [a, b, c, d], correct: correct });
+            localStorage.setItem('bio_questions', JSON.stringify(questions));
+            alert("Savol muvaffaqiyatli qo'shildi!");
             
-            const imgContainer = document.getElementById('question-image-container');
-            const imgElement = document.getElementById('question-image');
-            if (q.image && q.image.trim() !== '') {
-                imgElement.src = q.image;
-                imgContainer.classList.remove('hidden');
-            } else {
-                imgContainer.classList.add('hidden');
-            }
-
-            document.getElementById('explanation-box').classList.add('hidden');
-            document.getElementById('next-btn').classList.add('hidden');
-            answered = false;
-
-            const optsDiv = document.getElementById('options-container');
-            optsDiv.innerHTML = '';
-
-            q.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex items-center justify-between text-xs md:text-sm font-medium";
-                btn.innerHTML = `<span><strong class="mr-2">${String.fromCharCode(65 + idx)})</strong> ${opt}</span>`;
-                btn.onclick = () => selectOption(idx, btn);
-                optsDiv.appendChild(btn);
-            });
+            document.getElementById('new-q-text').value = '';
+            document.getElementById('opt-a').value = '';
+            document.getElementById('opt-b').value = '';
+            document.getElementById('opt-c').value = '';
+            document.getElementById('opt-d').value = '';
+            updateAdminInfo();
         }
 
-        function selectOption(selectedIdx, element) {
-            if (answered) return;
-            answered = true;
-
-            const q = questions[currentQIndex];
-            const qPoints = parseInt(q.points) || 10;
-            const buttons = document.getElementById('options-container').querySelectorAll('button');
-
-            if (selectedIdx === q.correct) {
-                element.className = "w-full text-left p-3 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-900 font-bold text-xs md:text-sm";
-                totalScore += qPoints;
-                correctCount++;
-                document.getElementById('quiz-score').innerText = `Umumiy Ball: ${totalScore}`;
-            } else {
-                element.className = "w-full text-left p-3 rounded-xl border-2 border-rose-500 bg-rose-100 text-rose-900 font-bold text-xs md:text-sm";
-                buttons[q.correct].className = "w-full text-left p-3 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-900 font-bold text-xs md:text-sm";
-            }
-
-            if (q.explanation) {
-                document.getElementById('explanation-text').innerText = q.explanation;
-                document.getElementById('explanation-box').classList.remove('hidden');
-            }
-
-            document.getElementById('next-btn').classList.remove('hidden');
+        function updateAdminInfo() {
+            document.getElementById('admin-q-count').innerText = `Jami savollar: ${questions.length} ta`;
         }
 
-        function nextQuestion() {
-            currentQIndex++;
-            if (currentQIndex < questions.length) {
-                renderQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function showResults() {
-            clearInterval(timerInterval);
-            
-            const timeSpentSec = Math.round((Date.now() - startTimeMs) / 1000);
-            const minSpent = Math.floor(timeSpentSec / 60);
-            const secSpent = timeSpentSec % 60;
-            const timeSpentStr = `${minSpent} daqiqa ${secSpent} soniya`;
-
-            const resultData = {
-                name: currentStudentName,
-                score: totalScore,
-                correct: correctCount,
-                totalQ: questions.length,
-                timeSpentSec: timeSpentSec,
-                timeSpentStr: timeSpentStr,
-                date: new Date().toLocaleDateString('uz-UZ')
-            };
-
-            leaderboard.push(resultData);
-            leaderboard.sort((a, b) => b.score - a.score || a.timeSpentSec - b.timeSpentSec);
-            localStorage.setItem('biolog_leaderboard', JSON.stringify(leaderboard));
-
-            document.getElementById('quiz-card').classList.add('hidden');
-            document.getElementById('result-card').classList.remove('hidden');
-            document.getElementById('student-result-name').innerText = `O'quvchi: ${currentStudentName}`;
-            document.getElementById('final-correct').innerText = `${questions.length} ta savoldan ${correctCount} tasiga to'g'ri javob berdingiz.`;
-            document.getElementById('final-time-spent').innerText = `⏱ Ketgan vaqt: ${timeSpentStr}`;
-
-            const iconContainer = document.getElementById('result-icon-container');
-            const titleElement = document.getElementById('result-title');
-            const feedbackElement = document.getElementById('result-feedback');
-
-            if (passingScore > 0) {
-                document.getElementById('final-score').innerText = `${totalScore} Ball`;
-                document.getElementById('pass-score-info').innerText = `(O'tish bali: ${passingScore} ball)`;
-
-                if (totalScore >= passingScore) {
-                    iconContainer.innerHTML = '<i class="fa-solid fa-trophy text-6xl text-amber-500 animate-bounce"></i>';
-                    titleElement.innerText = "Ajoyib Natija! 🎉";
-                    feedbackElement.innerText = "Tabriklaymiz! Siz reytingda yuqori o'rin egalladingiz!";
-                    feedbackElement.className = "text-sm font-bold text-emerald-700 mb-4 px-4";
-                } else {
-                    iconContainer.innerHTML = '<i class="fa-solid fa-medal text-6xl text-yellow-500"></i>';
-                    titleElement.innerText = "Yaxshi Harakat! 👏";
-                    feedbackElement.innerText = "Yana biroz tayyorgarlik ko'rsangiz kubok sizniki bo'ladi!";
-                    feedbackElement.className = "text-sm font-bold text-amber-600 mb-4 px-4";
-                }
-            } else {
-                document.getElementById('final-score').innerText = `${correctCount} ta to'g'ri`;
-                iconContainer.innerHTML = '<i class="fa-solid fa-star text-6xl text-amber-400"></i>';
-                titleElement.innerText = "Test Yakunlandi! 🌟";
-                feedbackElement.innerText = "Natijangiz reytingga muvaffaqiyatli qo'shildi.";
-            }
-        }
-
-        function renderLeaderboard() {
-            const listDiv = document.getElementById('leaderboard-list');
-            listDiv.innerHTML = '';
-
-            if (leaderboard.length === 0) {
-                listDiv.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-4">Hozircha hech kim test topshirmadi.</p>';
-                return;
-            }
-
-            leaderboard.forEach((item, index) => {
-                const rank = index + 1;
-                let rankBadge = `<span class="w-6 h-6 flex items-center justify-center font-bold text-xs rounded-full bg-slate-100 text-slate-700 mr-3">${rank}</span>`;
-                let bgStyle = "bg-white border-slate-200";
-
-                if (rank === 1) {
-                    rankBadge = `<span class="w-7 h-7 flex items-center justify-center font-bold text-sm rounded-full bg-amber-400 text-white shadow mr-3"><i class="fa-solid fa-crown text-amber-100"></i></span>`;
-                    bgStyle = "bg-amber-50/60 border-amber-300";
-                } else if (rank === 2) {
-                    rankBadge = `<span class="w-6 h-6 flex items-center justify-center font-bold text-xs rounded-full bg-slate-300 text-slate-800 mr-3">2</span>`;
-                } else if (rank === 3) {
-                    rankBadge = `<span class="w-6 h-6 flex items-center justify-center font-bold text-xs rounded-full bg-amber-700 text-white mr-3">3</span>`;
-                }
-
-                const row = document.createElement('div');
-                row.className = `flex items-center justify-between p-3 rounded-xl border ${bgStyle} transition text-xs`;
-                row.innerHTML = `
-                    <div class="flex items-center truncate mr-2">
-                        ${rankBadge}
-                        <div>
-                            <p class="font-bold text-slate-800">${item.name}</p>
-                            <p class="text-[10px] text-slate-500"><i class="fa-solid fa-clock mr-1"></i>${item.timeSpentStr} • ${item.date}</p>
-                        </div>
-                    </div>
-                    <div class="text-right flex-shrink-0">
-                        <span class="text-sm font-extrabold text-emerald-700 block">${item.score} Ball</span>
-                        <span class="text-[10px] text-slate-500">${item.correct}/${item.totalQ} to'g'ri</span>
-                    </div>
-                `;
-                listDiv.appendChild(row);
-            });
-        }
-
-        function clearLeaderboard() {
-            if (confirm("Barcha reyting natijalarini tozalab tashlaysizmi?")) {
+        function clearAllData() {
+            if(confirm("Barcha reyting va natijalarni o'chirib tashlamoqchimisiz?")) {
                 leaderboard = [];
-                localStorage.removeItem('biolog_leaderboard');
-                renderLeaderboard();
-                alert("Reyting tozalandi!");
+                localStorage.removeItem('bio_leaderboard');
+                alert("Natijalar tozalandi!");
             }
         }
-
-        function saveQuestion(e) {
-            e.preventDefault();
-            const newQ = {
-                question: document.getElementById('input-question').value,
-                image: document.getElementById('input-image').value,
-                options: [
-                    document.getElementById('input-opt-0').value,
-                    document.getElementById('input-opt-1').value,
-                    document.getElementById('input-opt-2').value,
-                    document.getElementById('input-opt-3').value
-                ],
-                correct: parseInt(document.getElementById('input-correct').value),
-                points: parseInt(document.getElementById('input-points').value) || 0,
-                explanation: document.getElementById('input-explanation').value
-            };
-
-            questions.push(newQ);
-            saveToStorage();
-
-            alert("Savol saqlandi!");
-            document.getElementById('add-question-form').reset();
-            renderAdminList();
-            checkQuizAvailability();
-        }
-
-        function renderAdminList() {
-            const listDiv = document.getElementById('admin-questions-list');
-            listDiv.innerHTML = '';
-
-            if (questions.length === 0) {
-                listDiv.innerHTML = '<p class="text-xs text-slate-500 italic">Savollar ro\'yxati bo\'sh.</p>';
-                return;
-            }
-
-            questions.forEach((q, index) => {
-                const item = document.createElement('div');
-                item.className = "flex items-center justify-between p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition text-xs";
-                item.innerHTML = `
-                    <div class="truncate mr-2">
-                        <span class="font-bold text-emerald-700 mr-1">${index + 1}.</span>
-                        <span class="font-medium text-slate-800">${q.question}</span>
-                    </div>
-                    <button onclick="deleteQuestion(${index})" class="text-rose-600 hover:bg-rose-50 p-1.5 rounded font-semibold transition flex-shrink-0">
-                        <i class="fa-solid fa-trash mr-1"></i> O'chirish
-                    </button>
-                `;
-                listDiv.appendChild(item);
-            });
-        }
-
-        function deleteQuestion(index) {
-            if (confirm("Ushbu savolni o'chirasizmi?")) {
-                questions.splice(index, 1);
-                saveToStorage();
-                renderAdminList();
-                checkQuizAvailability();
-            }
-        }
-
-        function clearAllQuestions() {
-            if (confirm("Barcha savollarni o'chirasizmi?")) {
-                questions = [];
-                saveToStorage();
-                renderAdminList();
-                checkQuizAvailability();
-            }
-        }
-
-        checkQuizAvailability();
     </script>
 </body>
 </html>
