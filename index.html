@@ -4,111 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biolog o'quvchi - Onlayn Test Platformasi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Kirish ekrani animatsiyasi (silliq va yengil) */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: #ecfdf5; color: #1e293b; padding-bottom: 20px; }
+        
+        /* Kirish ekrani */
         #welcome-screen {
-            transition: opacity 0.5s ease-in-out;
+            position: fixed; inset: 0; background: #047857; color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000; text-align: center; padding: 20px; transition: opacity 0.5s ease;
         }
+        .welcome-card { background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 16px; max-w: 380px; width: 100%; }
+        .welcome-badge { display: inline-block; background: white; color: #065f46; font-weight: bold; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin-top: 15px; }
+
+        /* Header */
+        header { background: #047857; color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header-container { max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+        nav { display: flex; gap: 6px; }
+        nav button { border: none; background: transparent; color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        nav button.active { background: white; color: #065f46; }
+
+        /* Asosiy qism */
+        main { max-width: 600px; margin: 15px auto; padding: 0 12px; }
+        .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #a7f3d0; margin-bottom: 15px; }
+        .hidden { display: none !important; }
+
+        /* Form va elementlar */
+        input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-top: 4px; margin-bottom: 12px; }
+        input:focus { border-color: #059669; }
+        label { font-size: 12px; font-weight: bold; color: #334155; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #059669; color: white; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .btn:active { background: #047857; }
+        .btn-danger { background: #e11d48; }
+
+        /* Test va Javoblar */
+        .quiz-top { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; }
+        .timer-box { color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 20px; }
+        .q-box { color: #047857; background: #d1fae5; padding: 4px 10px; border-radius: 20px; }
+        .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
+        .option-btn.selected { border-color: #059669; background: #d1fae5; font-weight: bold; }
+
+        /* Jadvallar */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #ecfdf5; color: #065f46; font-size: 11px; text-transform: uppercase; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     </style>
 </head>
-<body class="bg-emerald-50 min-h-screen text-slate-800 font-sans">
+<body>
 
-    <!-- WELCOME SCREEN (Kirish ekrani - aynan 2 sekund duradi) -->
-    <div id="welcome-screen" class="fixed inset-0 bg-emerald-700 flex flex-col items-center justify-center text-white z-[100] p-6 text-center">
-        <div class="space-y-3 max-w-md">
-            <i class="fa-solid fa-kaaba text-4xl text-amber-300 mb-1"></i>
-            <h1 class="text-2xl md:text-3xl font-bold tracking-wide">Assalomu alaykum!</h1>
-            <p class="text-lg md:text-xl font-serif italic text-emerald-100">Bismillahir Rahmanir Rahim</p>
-            <div class="pt-2">
-                <span class="inline-block bg-white text-emerald-800 text-sm font-bold px-5 py-2 rounded-full shadow">
-                    ✨ Testda omad yor bo'lsin!
-                </span>
-            </div>
+    <!-- KIRISH EKRANI (Aynan 2 sekund duradi) -->
+    <div id="welcome-screen">
+        <div class="welcome-card">
+            <h1 style="font-size: 22px; margin-bottom: 8px;">Assalomu alaykum!</h1>
+            <p style="font-style: italic; color: #a7f3d0; margin-bottom: 10px;">Bismillahir Rahmanir Rahim</p>
+            <div class="welcome-badge">✨ Testda omad yor bo'lsin!</div>
         </div>
     </div>
 
     <!-- HEADER -->
-    <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-leaf text-xl text-amber-300"></i>
-                <h1 class="text-lg font-bold tracking-wide">Biolog o'quvchi</h1>
-            </div>
-            <nav class="flex space-x-1 sm:space-x-2">
-                <button onclick="switchTab('quiz')" id="tab-quiz" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow">
-                    <i class="fa-solid fa-pen-to-square mr-1"></i> Test
-                </button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600">
-                    <i class="fa-solid fa-trophy mr-1"></i> Reyting
-                </button>
-                <button onclick="checkAdminPassword()" id="tab-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600">
-                    <i class="fa-solid fa-lock mr-1"></i> Admin
-                </button>
+    <header>
+        <div class="header-container">
+            <div class="logo">🍃 Biolog o'quvchi</div>
+            <nav>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="active">Test</button>
+                <button onclick="switchTab('leaderboard')" id="tab-leaderboard">Reyting</button>
+                <button onclick="checkAdminPassword()" id="tab-admin">Admin</button>
             </nav>
         </div>
     </header>
 
-    <main class="max-w-2xl mx-auto p-4 mt-2">
+    <main>
         <!-- TEST BO'LIMI -->
-        <section id="section-quiz" class="block">
-            <div id="start-card" class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center max-w-md mx-auto space-y-4">
-                <i class="fa-solid fa-user-pen text-4xl text-emerald-600 mb-1"></i>
-                <h2 class="text-xl font-bold text-slate-800">Testga xush kelibsiz!</h2>
-                
-                <div id="student-form-box" class="space-y-3 text-left pt-2">
-                    <p class="text-xs text-slate-600 text-center">Testni boshlash uchun ismingizni kiritib tugmani bosing.</p>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Ism va Familiyangiz:</label>
-                        <input type="text" id="student-name" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="Masalan: Ali Valiyev">
-                    </div>
-                    <button onclick="startQuiz()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow transition mt-2">
-                        Testni boshlash <i class="fa-solid fa-arrow-right ml-1"></i>
-                    </button>
+        <section id="section-quiz">
+            <div id="start-card" class="card" style="text-align: center;">
+                <h2 style="margin-bottom: 10px;">Testga xush kelibsiz!</h2>
+                <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Testni boshlash uchun ism-familiyangizni kiriting:</p>
+                <div style="text-align: left;">
+                    <label>Ism va Familiyangiz:</label>
+                    <input type="text" id="student-name" placeholder="Masalan: Ali Valiyev">
+                    <button onclick="startQuiz()" class="btn">Testni boshlash ➔</button>
                 </div>
             </div>
 
-            <!-- SAVOLLAR BO'LIMI -->
-            <div id="quiz-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-4">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <span id="question-count" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">Savol: 1 / 0</span>
-                    <span id="timer" class="text-xs font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full"><i class="fa-regular fa-clock mr-1"></i> 00:00</span>
+            <div id="quiz-card" class="card hidden">
+                <div class="quiz-top">
+                    <span id="question-count" class="q-box">Savol: 1 / 0</span>
+                    <span id="timer" class="timer-box">⏱ 00:00</span>
                 </div>
-                <div id="question-text" class="text-base font-semibold text-slate-800 py-2"></div>
-                <div id="options-container" class="space-y-2"></div>
-                <div class="pt-3 border-t flex justify-end">
-                    <button onclick="nextQuestion()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition">
-                        Keyingisi <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </button>
+                <div id="question-text" style="font-weight: 600; font-size: 15px; margin-bottom: 15px;"></div>
+                <div id="options-container"></div>
+                <div style="text-align: right; margin-top: 15px;">
+                    <button onclick="nextQuestion()" class="btn" style="width: auto; padding: 8px 20px;">Keyingisi ➔</button>
                 </div>
             </div>
 
-            <!-- NATIJA BO'LIMI -->
-            <div id="result-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center space-y-4 max-w-md mx-auto">
-                <i class="fa-solid fa-circle-check text-5xl text-emerald-500"></i>
-                <h2 class="text-2xl font-bold text-slate-800">Test Yakunlandi!</h2>
-                <div id="score-text" class="text-lg font-medium text-slate-700"></div>
-                <button onclick="location.reload()" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm shadow">
-                    Boshiga qaytish
-                </button>
+            <div id="result-card" class="card hidden" style="text-align: center;">
+                <h2 style="color: #059669; margin-bottom: 10px;">Test Yakunlandi!</h2>
+                <div id="score-text" style="font-size: 15px; margin-bottom: 15px;"></div>
+                <button onclick="location.reload()" class="btn">Boshiga qaytish</button>
             </div>
         </section>
 
         <!-- REYTING BO'LIMI -->
         <section id="section-leaderboard" class="hidden">
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-4">
-                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-trophy text-amber-500"></i> Natijalar va Reyting
-                </h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-600">
-                        <thead class="bg-emerald-50 text-emerald-800 font-bold uppercase text-xs">
+            <div class="card">
+                <h2>🏆 Reyting va Natijalar</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
                             <tr>
-                                <th class="p-3">#</th>
-                                <th class="p-3">Ism va Familiya</th>
-                                <th class="p-3">To'g'ri / Jami</th>
-                                <th class="p-3">To'plangan Ball</th>
+                                <th>#</th>
+                                <th>Ism Familiya</th>
+                                <th>To'g'ri</th>
+                                <th>Ball</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboard-body"></tbody>
@@ -119,78 +130,66 @@
 
         <!-- ADMIN BO'LIMI -->
         <section id="section-admin" class="hidden">
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-5">
-                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 border-b pb-3">
-                    <i class="fa-solid fa-user-shield text-emerald-600"></i> Admin Paneli
-                </h2>
-
-                <!-- TEST SOZLAMALARI -->
-                <div class="space-y-3 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
-                    <h3 class="font-bold text-sm text-emerald-800 flex items-center gap-1.5">
-                        <i class="fa-solid fa-sliders"></i> Test Sozlamalari (Vaqt, Sana, Ball)
-                    </h3>
-                    <div class="grid grid-cols-2 gap-2">
+            <div class="card">
+                <h2 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">⚙️ Admin Paneli</h2>
+                
+                <!-- SOZLAMALAR -->
+                <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
+                    <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
+                    <div class="grid-2">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Vaqt (daqiqada):</label>
-                            <input type="number" id="cfg-duration" value="15" class="w-full p-2 border rounded-xl text-sm" placeholder="15">
+                            <label>Vaqt (daqiqa):</label>
+                            <input type="number" id="cfg-duration" value="15">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">1 ta savol bali:</label>
-                            <input type="number" step="0.1" id="cfg-points" value="2" class="w-full p-2 border rounded-xl text-sm" placeholder="2">
+                            <label>1 ta savol bali:</label>
+                            <input type="number" step="0.1" id="cfg-points" value="2">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Test boshlanish vaqti:</label>
-                        <input type="datetime-local" id="cfg-start" class="w-full p-2 border rounded-xl text-sm">
+                        <label>Boshlanish vaqti:</label>
+                        <input type="datetime-local" id="cfg-start">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Test tugash vaqti:</label>
-                        <input type="datetime-local" id="cfg-end" class="w-full p-2 border rounded-xl text-sm">
+                        <label>Tugash vaqti:</label>
+                        <input type="datetime-local" id="cfg-end">
                     </div>
-                    <button onclick="saveSettings()" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow transition">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> Sozlamalarni saqlash
-                    </button>
+                    <button onclick="saveSettings()" class="btn">Sozlamalarni saqlash</button>
                 </div>
 
                 <!-- SAVOL QO'SHISH -->
-                <div class="space-y-3 border-b pb-4">
-                    <h3 class="font-bold text-sm text-slate-700">Yangi Savol Qo'shish</h3>
-                    <input type="text" id="new-q-text" placeholder="Savol matni" class="w-full p-2.5 border rounded-xl text-sm">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="opt-a" placeholder="A variant" class="p-2 border rounded-xl text-sm">
-                        <input type="text" id="opt-b" placeholder="B variant" class="p-2 border rounded-xl text-sm">
-                        <input type="text" id="opt-c" placeholder="C variant" class="p-2 border rounded-xl text-sm">
-                        <input type="text" id="opt-d" placeholder="D variant" class="p-2 border rounded-xl text-sm">
+                <div>
+                    <h3 style="font-size: 14px; margin-bottom: 8px;">Yangi Savol Qo'shish</h3>
+                    <input type="text" id="new-q-text" placeholder="Savol matni">
+                    <div class="grid-2">
+                        <input type="text" id="opt-a" placeholder="A variant">
+                        <input type="text" id="opt-b" placeholder="B variant">
+                        <input type="text" id="opt-c" placeholder="C variant">
+                        <input type="text" id="opt-d" placeholder="D variant">
                     </div>
-                    <select id="correct-opt" class="w-full p-2.5 border rounded-xl text-sm">
-                        <option value="0">To'g'ri javob: A</option>
-                        <option value="1">To'g'ri javob: B</option>
-                        <option value="2">To'g'ri javob: C</option>
-                        <option value="3">To'g'ri javob: D</option>
+                    <label>To'g'ri javob:</label>
+                    <select id="correct-opt">
+                        <option value="0">A variant</option>
+                        <option value="1">B variant</option>
+                        <option value="2">C variant</option>
+                        <option value="3">D variant</option>
                     </select>
-                    <button onclick="addQuestion()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm shadow">
-                        Savolni saqlash
-                    </button>
+                    <button onclick="addQuestion()" class="btn">Savolni saqlash</button>
                 </div>
 
-                <div class="pt-1 flex justify-between items-center">
-                    <span id="admin-q-count" class="text-xs font-bold text-slate-600">Jami savollar: 0 ta</span>
-                    <button onclick="clearAllData()" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-xl">
-                        Natijalarni tozalash
-                    </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                    <span id="admin-q-count" style="font-size: 12px; font-weight: bold;">Jami savollar: 0 ta</span>
+                    <button onclick="clearAllData()" class="btn btn-danger" style="width: auto; padding: 6px 12px; font-size: 11px;">Natijalarni tozalash</button>
                 </div>
             </div>
         </section>
     </main>
 
     <script>
-        // Kirish ekranini aynan 2 sekund (2000 ms) turib, silliq yo'qolishi uchun:
+        // Aynan 2 sekund (2000ms) yo'qolishi uchun
         setTimeout(() => {
             const w = document.getElementById('welcome-screen');
-            if(w) { 
-                w.style.opacity = '0'; 
-                setTimeout(() => w.style.display = 'none', 500); 
-            }
+            if(w) { w.style.opacity = '0'; setTimeout(() => w.style.display = 'none', 500); }
         }, 2000);
 
         let questions = JSON.parse(localStorage.getItem('bio_questions')) || [
@@ -198,24 +197,17 @@
             { text: "Fotosintez jarayoni qaysi organoidda boradi?", options: ["MitoXondriya", "Xloroplast", "Ribosoma", "Lizosoma"], correct: 1 }
         ];
         let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
-        let settings = JSON.parse(localStorage.getItem('bio_settings')) || {
-            duration: 15,
-            points: 2,
-            start: "",
-            end: ""
-        };
+        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { duration: 15, points: 2, start: "", end: "" };
 
         let currentQ = 0, score = 0, currentStudent = "", selectedOption = null, timerInterval = null, timeLeft = 0;
 
         function switchTab(tab) {
             ['quiz', 'leaderboard', 'admin'].forEach(t => {
                 document.getElementById('section-' + t).classList.add('hidden');
-                document.getElementById('tab-' + t).classList.remove('bg-white', 'text-emerald-800', 'shadow');
-                document.getElementById('tab-' + t).classList.add('hover:bg-emerald-600');
+                document.getElementById('tab-' + t).classList.remove('active');
             });
             document.getElementById('section-' + tab).classList.remove('hidden');
-            document.getElementById('tab-' + tab).classList.add('bg-white', 'text-emerald-800', 'shadow');
-            
+            document.getElementById('tab-' + tab).classList.add('active');
             if(tab === 'leaderboard') renderLeaderboard();
             if(tab === 'admin') loadAdminSettings();
         }
@@ -225,7 +217,6 @@
             settings.points = parseFloat(document.getElementById('cfg-points').value) || 2;
             settings.start = document.getElementById('cfg-start').value;
             settings.end = document.getElementById('cfg-end').value;
-
             localStorage.setItem('bio_settings', JSON.stringify(settings));
             alert("Sozlamalar saqlandi!");
         }
@@ -240,24 +231,16 @@
 
         function startQuiz() {
             const nameInput = document.getElementById('student-name').value.trim();
-            if(!nameInput) { alert("Iltimos, ismingizni kiriting!"); return; }
-            if(questions.length === 0) { alert("Hozircha savollar mavjud emas!"); return; }
+            if(!nameInput) { alert("Ismingizni kiriting!"); return; }
+            if(questions.length === 0) { alert("Savollar topilmadi!"); return; }
 
             const now = new Date();
-            if(settings.start && new Date(settings.start) > now) {
-                alert(`Test hali boshlanmadi! Boshlanish vaqti: ${settings.start.replace('T', ' ')}`);
-                return;
-            }
-            if(settings.end && new Date(settings.end) < now) {
-                alert(`Test vaqti yakunlangan! Tugash vaqti: ${settings.end.replace('T', ' ')}`);
-                return;
-            }
+            if(settings.start && new Date(settings.start) > now) { alert("Test hali boshlanmagan!"); return; }
+            if(settings.end && new Date(settings.end) < now) { alert("Test vaqti tugagan!"); return; }
 
-            currentStudent = nameInput;
-            currentQ = 0; score = 0;
+            currentStudent = nameInput; currentQ = 0; score = 0;
             document.getElementById('start-card').classList.add('hidden');
             document.getElementById('quiz-card').classList.remove('hidden');
-            
             startTimer(settings.duration * 60);
             showQuestion();
         }
@@ -269,18 +252,14 @@
             timerInterval = setInterval(() => {
                 timeLeft--;
                 updateTimerDisplay();
-                if(timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert("Vaqtingiz tugadi!");
-                    finishQuiz();
-                }
+                if(timeLeft <= 0) { clearInterval(timerInterval); alert("Vaqtingiz tugadi!"); finishQuiz(); }
             }, 1000);
         }
 
         function updateTimerDisplay() {
             const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
             const s = (timeLeft % 60).toString().padStart(2, '0');
-            document.getElementById('timer').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> ${m}:${s}`;
+            document.getElementById('timer').innerText = `⏱ ${m}:${s}`;
         }
 
         function showQuestion() {
@@ -293,11 +272,11 @@
             optsBox.innerHTML = '';
             q.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-3 border rounded-xl text-sm transition hover:bg-emerald-50";
+                btn.className = "option-btn";
                 btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
                 btn.onclick = () => {
-                    Array.from(optsBox.children).forEach(c => c.classList.remove('border-emerald-600', 'bg-emerald-100', 'font-bold'));
-                    btn.classList.add('border-emerald-600', 'bg-emerald-100', 'font-bold');
+                    Array.from(optsBox.children).forEach(c => c.classList.remove('selected'));
+                    btn.classList.add('selected');
                     selectedOption = idx;
                 };
                 optsBox.appendChild(btn);
@@ -307,37 +286,24 @@
         function nextQuestion() {
             if(selectedOption === null) { alert("Javob tanlang!"); return; }
             if(selectedOption === questions[currentQ].correct) score++;
-            
             currentQ++;
-            if(currentQ < questions.length) {
-                showQuestion();
-            } else {
-                finishQuiz();
-            }
+            if(currentQ < questions.length) showQuestion();
+            else finishQuiz();
         }
 
         function finishQuiz() {
             clearInterval(timerInterval);
             document.getElementById('quiz-card').classList.add('hidden');
             document.getElementById('result-card').classList.remove('hidden');
-            
             const totalPoints = (score * settings.points).toFixed(1);
             const maxPoints = (questions.length * settings.points).toFixed(1);
-
             document.getElementById('score-text').innerHTML = `
-                Hurmatli <b>${currentStudent}</b>,<br>
-                Siz <b>${questions.length}</b> ta savoldan <b>${score} ta</b>siga to'g'ri javob berdingiz.<br>
-                <div class="mt-2 text-xl font-bold text-emerald-700 bg-emerald-50 py-2 rounded-xl border border-emerald-200">
+                <b>${currentStudent}</b>,<br>Siz <b>${questions.length}</b> ta savoldan <b>${score} ta</b>siga to'g'ri javob berdingiz.<br>
+                <div style="margin-top:10px; font-weight:bold; color:#047857; font-size:18px;">
                     To'plangan ball: ${totalPoints} / ${maxPoints}
                 </div>
             `;
-            
-            leaderboard.push({ 
-                name: currentStudent, 
-                score: score, 
-                total: questions.length, 
-                points: totalPoints 
-            });
+            leaderboard.push({ name: currentStudent, score: score, total: questions.length, points: totalPoints });
             localStorage.setItem('bio_leaderboard', JSON.stringify(leaderboard));
         }
 
@@ -345,24 +311,14 @@
             const body = document.getElementById('leaderboard-body');
             body.innerHTML = '';
             leaderboard.sort((a,b) => b.points - a.points).forEach((item, i) => {
-                body.innerHTML += `
-                    <tr class="border-b">
-                        <td class="p-3 font-bold">${i+1}</td>
-                        <td class="p-3">${item.name}</td>
-                        <td class="p-3 font-semibold">${item.score} / ${item.total}</td>
-                        <td class="p-3 font-bold text-emerald-600">${item.points} ball</td>
-                    </tr>
-                `;
+                body.innerHTML += `<tr><td><b>${i+1}</b></td><td>${item.name}</td><td>${item.score}/${item.total}</td><td style="color:#059669; font-weight:bold;">${item.points}</td></tr>`;
             });
         }
 
         function checkAdminPassword() {
-            const pass = prompt("Admin parolini kiriting:");
-            if(pass === "8888") {
-                switchTab('admin');
-            } else if(pass !== null) {
-                alert("Parol noto'g'ri!");
-            }
+            const pass = prompt("Admin paroli:");
+            if(pass === "8888") switchTab('admin');
+            else if(pass !== null) alert("Noto'g'ri parol!");
         }
 
         function addQuestion() {
@@ -373,22 +329,18 @@
             const d = document.getElementById('opt-d').value.trim();
             const correct = parseInt(document.getElementById('correct-opt').value);
 
-            if(!text || !a || !b || !c || !d) { alert("Barcha maydonlarni to'ldiring!"); return; }
-
+            if(!text || !a || !b || !c || !d) { alert("Barcha joylarni to'ldiring!"); return; }
             questions.push({ text: text, options: [a, b, c, d], correct: correct });
             localStorage.setItem('bio_questions', JSON.stringify(questions));
             alert("Savol saqlandi!");
-            
             document.getElementById('new-q-text').value = '';
-            document.getElementById('opt-a').value = '';
-            document.getElementById('opt-b').value = '';
-            document.getElementById('opt-c').value = '';
-            document.getElementById('opt-d').value = '';
+            document.getElementById('opt-a').value = ''; document.getElementById('opt-b').value = '';
+            document.getElementById('opt-c').value = ''; document.getElementById('opt-d').value = '';
             loadAdminSettings();
         }
 
         function clearAllData() {
-            if(confirm("Barcha reyting va natijalarni o'chirib tashlamoqchimisiz?")) {
+            if(confirm("Barcha natijalarni o'chirasizmi?")) {
                 leaderboard = [];
                 localStorage.removeItem('bio_leaderboard');
                 alert("Natijalar tozalandi!");
@@ -403,111 +355,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biolog o'quvchi - Onlayn Test Platformasi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Kirish ekrani animatsiyasi (silliq va yengil) */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: #ecfdf5; color: #1e293b; padding-bottom: 20px; }
+        
+        /* Kirish ekrani */
         #welcome-screen {
-            transition: opacity 0.5s ease-in-out;
+            position: fixed; inset: 0; background: #047857; color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000; text-align: center; padding: 20px; transition: opacity 0.5s ease;
         }
+        .welcome-card { background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 16px; max-w: 380px; width: 100%; }
+        .welcome-badge { display: inline-block; background: white; color: #065f46; font-weight: bold; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin-top: 15px; }
+
+        /* Header */
+        header { background: #047857; color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header-container { max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+        nav { display: flex; gap: 6px; }
+        nav button { border: none; background: transparent; color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        nav button.active { background: white; color: #065f46; }
+
+        /* Asosiy qism */
+        main { max-width: 600px; margin: 15px auto; padding: 0 12px; }
+        .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #a7f3d0; margin-bottom: 15px; }
+        .hidden { display: none !important; }
+
+        /* Form va elementlar */
+        input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-top: 4px; margin-bottom: 12px; }
+        input:focus { border-color: #059669; }
+        label { font-size: 12px; font-weight: bold; color: #334155; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #059669; color: white; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .btn:active { background: #047857; }
+        .btn-danger { background: #e11d48; }
+
+        /* Test va Javoblar */
+        .quiz-top { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; }
+        .timer-box { color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 20px; }
+        .q-box { color: #047857; background: #d1fae5; padding: 4px 10px; border-radius: 20px; }
+        .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
+        .option-btn.selected { border-color: #059669; background: #d1fae5; font-weight: bold; }
+
+        /* Jadvallar */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #ecfdf5; color: #065f46; font-size: 11px; text-transform: uppercase; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     </style>
 </head>
-<body class="bg-emerald-50 min-h-screen text-slate-800 font-sans">
+<body>
 
-    <!-- WELCOME SCREEN (Kirish ekrani - aynan 2 sekund duradi) -->
-    <div id="welcome-screen" class="fixed inset-0 bg-emerald-700 flex flex-col items-center justify-center text-white z-[100] p-6 text-center">
-        <div class="space-y-3 max-w-md">
-            <i class="fa-solid fa-kaaba text-4xl text-amber-300 mb-1"></i>
-            <h1 class="text-2xl md:text-3xl font-bold tracking-wide">Assalomu alaykum!</h1>
-            <p class="text-lg md:text-xl font-serif italic text-emerald-100">Bismillahir Rahmanir Rahim</p>
-            <div class="pt-2">
-                <span class="inline-block bg-white text-emerald-800 text-sm font-bold px-5 py-2 rounded-full shadow">
-                    ✨ Testda omad yor bo'lsin!
-                </span>
-            </div>
+    <!-- KIRISH EKRANI (Aynan 2 sekund duradi) -->
+    <div id="welcome-screen">
+        <div class="welcome-card">
+            <h1 style="font-size: 22px; margin-bottom: 8px;">Assalomu alaykum!</h1>
+            <p style="font-style: italic; color: #a7f3d0; margin-bottom: 10px;">Bismillahir Rahmanir Rahim</p>
+            <div class="welcome-badge">✨ Testda omad yor bo'lsin!</div>
         </div>
     </div>
 
     <!-- HEADER -->
-    <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-leaf text-xl text-amber-300"></i>
-                <h1 class="text-lg font-bold tracking-wide">Biolog o'quvchi</h1>
-            </div>
-            <nav class="flex space-x-1 sm:space-x-2">
-                <button onclick="switchTab('quiz')" id="tab-quiz" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-emerald-800 shadow">
-                    <i class="fa-solid fa-pen-to-square mr-1"></i> Test
-                </button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600">
-                    <i class="fa-solid fa-trophy mr-1"></i> Reyting
-                </button>
-                <button onclick="checkAdminPassword()" id="tab-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-emerald-600">
-                    <i class="fa-solid fa-lock mr-1"></i> Admin
-                </button>
+    <header>
+        <div class="header-container">
+            <div class="logo">🍃 Biolog o'quvchi</div>
+            <nav>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="active">Test</button>
+                <button onclick="switchTab('leaderboard')" id="tab-leaderboard">Reyting</button>
+                <button onclick="checkAdminPassword()" id="tab-admin">Admin</button>
             </nav>
         </div>
     </header>
 
-    <main class="max-w-2xl mx-auto p-4 mt-2">
+    <main>
         <!-- TEST BO'LIMI -->
-        <section id="section-quiz" class="block">
-            <div id="start-card" class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center max-w-md mx-auto space-y-4">
-                <i class="fa-solid fa-user-pen text-4xl text-emerald-600 mb-1"></i>
-                <h2 class="text-xl font-bold text-slate-800">Testga xush kelibsiz!</h2>
-                
-                <div id="student-form-box" class="space-y-3 text-left pt-2">
-                    <p class="text-xs text-slate-600 text-center">Testni boshlash uchun ismingizni kiritib tugmani bosing.</p>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Ism va Familiyangiz:</label>
-                        <input type="text" id="student-name" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="Masalan: Ali Valiyev">
-                    </div>
-                    <button onclick="startQuiz()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow transition mt-2">
-                        Testni boshlash <i class="fa-solid fa-arrow-right ml-1"></i>
-                    </button>
+        <section id="section-quiz">
+            <div id="start-card" class="card" style="text-align: center;">
+                <h2 style="margin-bottom: 10px;">Testga xush kelibsiz!</h2>
+                <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Testni boshlash uchun ism-familiyangizni kiriting:</p>
+                <div style="text-align: left;">
+                    <label>Ism va Familiyangiz:</label>
+                    <input type="text" id="student-name" placeholder="Masalan: Ali Valiyev">
+                    <button onclick="startQuiz()" class="btn">Testni boshlash ➔</button>
                 </div>
             </div>
 
-            <!-- SAVOLLAR BO'LIMI -->
-            <div id="quiz-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-4">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <span id="question-count" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">Savol: 1 / 0</span>
-                    <span id="timer" class="text-xs font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full"><i class="fa-regular fa-clock mr-1"></i> 00:00</span>
+            <div id="quiz-card" class="card hidden">
+                <div class="quiz-top">
+                    <span id="question-count" class="q-box">Savol: 1 / 0</span>
+                    <span id="timer" class="timer-box">⏱ 00:00</span>
                 </div>
-                <div id="question-text" class="text-base font-semibold text-slate-800 py-2"></div>
-                <div id="options-container" class="space-y-2"></div>
-                <div class="pt-3 border-t flex justify-end">
-                    <button onclick="nextQuestion()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition">
-                        Keyingisi <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </button>
+                <div id="question-text" style="font-weight: 600; font-size: 15px; margin-bottom: 15px;"></div>
+                <div id="options-container"></div>
+                <div style="text-align: right; margin-top: 15px;">
+                    <button onclick="nextQuestion()" class="btn" style="width: auto; padding: 8px 20px;">Keyingisi ➔</button>
                 </div>
             </div>
 
-            <!-- NATIJA BO'LIMI -->
-            <div id="result-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 text-center space-y-4 max-w-md mx-auto">
-                <i class="fa-solid fa-circle-check text-5xl text-emerald-500"></i>
-                <h2 class="text-2xl font-bold text-slate-800">Test Yakunlandi!</h2>
-                <div id="score-text" class="text-lg font-medium text-slate-700"></div>
-                <button onclick="location.reload()" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm shadow">
-                    Boshiga qaytish
-                </button>
+            <div id="result-card" class="card hidden" style="text-align: center;">
+                <h2 style="color: #059669; margin-bottom: 10px;">Test Yakunlandi!</h2>
+                <div id="score-text" style="font-size: 15px; margin-bottom: 15px;"></div>
+                <button onclick="location.reload()" class="btn">Boshiga qaytish</button>
             </div>
         </section>
 
         <!-- REYTING BO'LIMI -->
         <section id="section-leaderboard" class="hidden">
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-4">
-                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-trophy text-amber-500"></i> Natijalar va Reyting
-                </h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-600">
-                        <thead class="bg-emerald-50 text-emerald-800 font-bold uppercase text-xs">
+            <div class="card">
+                <h2>🏆 Reyting va Natijalar</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
                             <tr>
-                                <th class="p-3">#</th>
-                                <th class="p-3">Ism va Familiya</th>
-                                <th class="p-3">To'g'ri / Jami</th>
-                                <th class="p-3">To'plangan Ball</th>
+                                <th>#</th>
+                                <th>Ism Familiya</th>
+                                <th>To'g'ri</th>
+                                <th>Ball</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboard-body"></tbody>
@@ -518,78 +481,66 @@
 
         <!-- ADMIN BO'LIMI -->
         <section id="section-admin" class="hidden">
-            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 space-y-5">
-                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 border-b pb-3">
-                    <i class="fa-solid fa-user-shield text-emerald-600"></i> Admin Paneli
-                </h2>
-
-                <!-- TEST SOZLAMALARI -->
-                <div class="space-y-3 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
-                    <h3 class="font-bold text-sm text-emerald-800 flex items-center gap-1.5">
-                        <i class="fa-solid fa-sliders"></i> Test Sozlamalari (Vaqt, Sana, Ball)
-                    </h3>
-                    <div class="grid grid-cols-2 gap-2">
+            <div class="card">
+                <h2 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">⚙️ Admin Paneli</h2>
+                
+                <!-- SOZLAMALAR -->
+                <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
+                    <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
+                    <div class="grid-2">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Vaqt (daqiqada):</label>
-                            <input type="number" id="cfg-duration" value="15" class="w-full p-2 border rounded-xl text-sm" placeholder="15">
+                            <label>Vaqt (daqiqa):</label>
+                            <input type="number" id="cfg-duration" value="15">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">1 ta savol bali:</label>
-                            <input type="number" step="0.1" id="cfg-points" value="2" class="w-full p-2 border rounded-xl text-sm" placeholder="2">
+                            <label>1 ta savol bali:</label>
+                            <input type="number" step="0.1" id="cfg-points" value="2">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Test boshlanish vaqti:</label>
-                        <input type="datetime-local" id="cfg-start" class="w-full p-2 border rounded-xl text-sm">
+                        <label>Boshlanish vaqti:</label>
+                        <input type="datetime-local" id="cfg-start">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Test tugash vaqti:</label>
-                        <input type="datetime-local" id="cfg-end" class="w-full p-2 border rounded-xl text-sm">
+                        <label>Tugash vaqti:</label>
+                        <input type="datetime-local" id="cfg-end">
                     </div>
-                    <button onclick="saveSettings()" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow transition">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> Sozlamalarni saqlash
-                    </button>
+                    <button onclick="saveSettings()" class="btn">Sozlamalarni saqlash</button>
                 </div>
 
                 <!-- SAVOL QO'SHISH -->
-                <div class="space-y-3 border-b pb-4">
-                    <h3 class="font-bold text-sm text-slate-700">Yangi Savol Qo'shish</h3>
-                    <input type="text" id="new-q-text" placeholder="Savol matni" class="w-full p-2.5 border rounded-xl text-sm">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="opt-a" placeholder="A variant" class="p-2 border rounded-xl text-sm">
-                        <input type="text" id="opt-b" placeholder="B variant" class="p-2 border rounded-xl text-sm">
-                        <input type="text" id="opt-c" placeholder="C variant" class="p-2 border rounded-xl text-sm">
-                        <input type="text" id="opt-d" placeholder="D variant" class="p-2 border rounded-xl text-sm">
+                <div>
+                    <h3 style="font-size: 14px; margin-bottom: 8px;">Yangi Savol Qo'shish</h3>
+                    <input type="text" id="new-q-text" placeholder="Savol matni">
+                    <div class="grid-2">
+                        <input type="text" id="opt-a" placeholder="A variant">
+                        <input type="text" id="opt-b" placeholder="B variant">
+                        <input type="text" id="opt-c" placeholder="C variant">
+                        <input type="text" id="opt-d" placeholder="D variant">
                     </div>
-                    <select id="correct-opt" class="w-full p-2.5 border rounded-xl text-sm">
-                        <option value="0">To'g'ri javob: A</option>
-                        <option value="1">To'g'ri javob: B</option>
-                        <option value="2">To'g'ri javob: C</option>
-                        <option value="3">To'g'ri javob: D</option>
+                    <label>To'g'ri javob:</label>
+                    <select id="correct-opt">
+                        <option value="0">A variant</option>
+                        <option value="1">B variant</option>
+                        <option value="2">C variant</option>
+                        <option value="3">D variant</option>
                     </select>
-                    <button onclick="addQuestion()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm shadow">
-                        Savolni saqlash
-                    </button>
+                    <button onclick="addQuestion()" class="btn">Savolni saqlash</button>
                 </div>
 
-                <div class="pt-1 flex justify-between items-center">
-                    <span id="admin-q-count" class="text-xs font-bold text-slate-600">Jami savollar: 0 ta</span>
-                    <button onclick="clearAllData()" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-xl">
-                        Natijalarni tozalash
-                    </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                    <span id="admin-q-count" style="font-size: 12px; font-weight: bold;">Jami savollar: 0 ta</span>
+                    <button onclick="clearAllData()" class="btn btn-danger" style="width: auto; padding: 6px 12px; font-size: 11px;">Natijalarni tozalash</button>
                 </div>
             </div>
         </section>
     </main>
 
     <script>
-        // Kirish ekranini aynan 2 sekund (2000 ms) turib, silliq yo'qolishi uchun:
+        // Aynan 2 sekund (2000ms) yo'qolishi uchun
         setTimeout(() => {
             const w = document.getElementById('welcome-screen');
-            if(w) { 
-                w.style.opacity = '0'; 
-                setTimeout(() => w.style.display = 'none', 500); 
-            }
+            if(w) { w.style.opacity = '0'; setTimeout(() => w.style.display = 'none', 500); }
         }, 2000);
 
         let questions = JSON.parse(localStorage.getItem('bio_questions')) || [
@@ -597,24 +548,17 @@
             { text: "Fotosintez jarayoni qaysi organoidda boradi?", options: ["MitoXondriya", "Xloroplast", "Ribosoma", "Lizosoma"], correct: 1 }
         ];
         let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
-        let settings = JSON.parse(localStorage.getItem('bio_settings')) || {
-            duration: 15,
-            points: 2,
-            start: "",
-            end: ""
-        };
+        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { duration: 15, points: 2, start: "", end: "" };
 
         let currentQ = 0, score = 0, currentStudent = "", selectedOption = null, timerInterval = null, timeLeft = 0;
 
         function switchTab(tab) {
             ['quiz', 'leaderboard', 'admin'].forEach(t => {
                 document.getElementById('section-' + t).classList.add('hidden');
-                document.getElementById('tab-' + t).classList.remove('bg-white', 'text-emerald-800', 'shadow');
-                document.getElementById('tab-' + t).classList.add('hover:bg-emerald-600');
+                document.getElementById('tab-' + t).classList.remove('active');
             });
             document.getElementById('section-' + tab).classList.remove('hidden');
-            document.getElementById('tab-' + tab).classList.add('bg-white', 'text-emerald-800', 'shadow');
-            
+            document.getElementById('tab-' + tab).classList.add('active');
             if(tab === 'leaderboard') renderLeaderboard();
             if(tab === 'admin') loadAdminSettings();
         }
@@ -624,7 +568,6 @@
             settings.points = parseFloat(document.getElementById('cfg-points').value) || 2;
             settings.start = document.getElementById('cfg-start').value;
             settings.end = document.getElementById('cfg-end').value;
-
             localStorage.setItem('bio_settings', JSON.stringify(settings));
             alert("Sozlamalar saqlandi!");
         }
@@ -639,24 +582,16 @@
 
         function startQuiz() {
             const nameInput = document.getElementById('student-name').value.trim();
-            if(!nameInput) { alert("Iltimos, ismingizni kiriting!"); return; }
-            if(questions.length === 0) { alert("Hozircha savollar mavjud emas!"); return; }
+            if(!nameInput) { alert("Ismingizni kiriting!"); return; }
+            if(questions.length === 0) { alert("Savollar topilmadi!"); return; }
 
             const now = new Date();
-            if(settings.start && new Date(settings.start) > now) {
-                alert(`Test hali boshlanmadi! Boshlanish vaqti: ${settings.start.replace('T', ' ')}`);
-                return;
-            }
-            if(settings.end && new Date(settings.end) < now) {
-                alert(`Test vaqti yakunlangan! Tugash vaqti: ${settings.end.replace('T', ' ')}`);
-                return;
-            }
+            if(settings.start && new Date(settings.start) > now) { alert("Test hali boshlanmagan!"); return; }
+            if(settings.end && new Date(settings.end) < now) { alert("Test vaqti tugagan!"); return; }
 
-            currentStudent = nameInput;
-            currentQ = 0; score = 0;
+            currentStudent = nameInput; currentQ = 0; score = 0;
             document.getElementById('start-card').classList.add('hidden');
             document.getElementById('quiz-card').classList.remove('hidden');
-            
             startTimer(settings.duration * 60);
             showQuestion();
         }
@@ -668,18 +603,14 @@
             timerInterval = setInterval(() => {
                 timeLeft--;
                 updateTimerDisplay();
-                if(timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert("Vaqtingiz tugadi!");
-                    finishQuiz();
-                }
+                if(timeLeft <= 0) { clearInterval(timerInterval); alert("Vaqtingiz tugadi!"); finishQuiz(); }
             }, 1000);
         }
 
         function updateTimerDisplay() {
             const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
             const s = (timeLeft % 60).toString().padStart(2, '0');
-            document.getElementById('timer').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> ${m}:${s}`;
+            document.getElementById('timer').innerText = `⏱ ${m}:${s}`;
         }
 
         function showQuestion() {
@@ -692,11 +623,11 @@
             optsBox.innerHTML = '';
             q.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-3 border rounded-xl text-sm transition hover:bg-emerald-50";
+                btn.className = "option-btn";
                 btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
                 btn.onclick = () => {
-                    Array.from(optsBox.children).forEach(c => c.classList.remove('border-emerald-600', 'bg-emerald-100', 'font-bold'));
-                    btn.classList.add('border-emerald-600', 'bg-emerald-100', 'font-bold');
+                    Array.from(optsBox.children).forEach(c => c.classList.remove('selected'));
+                    btn.classList.add('selected');
                     selectedOption = idx;
                 };
                 optsBox.appendChild(btn);
@@ -706,37 +637,24 @@
         function nextQuestion() {
             if(selectedOption === null) { alert("Javob tanlang!"); return; }
             if(selectedOption === questions[currentQ].correct) score++;
-            
             currentQ++;
-            if(currentQ < questions.length) {
-                showQuestion();
-            } else {
-                finishQuiz();
-            }
+            if(currentQ < questions.length) showQuestion();
+            else finishQuiz();
         }
 
         function finishQuiz() {
             clearInterval(timerInterval);
             document.getElementById('quiz-card').classList.add('hidden');
             document.getElementById('result-card').classList.remove('hidden');
-            
             const totalPoints = (score * settings.points).toFixed(1);
             const maxPoints = (questions.length * settings.points).toFixed(1);
-
             document.getElementById('score-text').innerHTML = `
-                Hurmatli <b>${currentStudent}</b>,<br>
-                Siz <b>${questions.length}</b> ta savoldan <b>${score} ta</b>siga to'g'ri javob berdingiz.<br>
-                <div class="mt-2 text-xl font-bold text-emerald-700 bg-emerald-50 py-2 rounded-xl border border-emerald-200">
+                <b>${currentStudent}</b>,<br>Siz <b>${questions.length}</b> ta savoldan <b>${score} ta</b>siga to'g'ri javob berdingiz.<br>
+                <div style="margin-top:10px; font-weight:bold; color:#047857; font-size:18px;">
                     To'plangan ball: ${totalPoints} / ${maxPoints}
                 </div>
             `;
-            
-            leaderboard.push({ 
-                name: currentStudent, 
-                score: score, 
-                total: questions.length, 
-                points: totalPoints 
-            });
+            leaderboard.push({ name: currentStudent, score: score, total: questions.length, points: totalPoints });
             localStorage.setItem('bio_leaderboard', JSON.stringify(leaderboard));
         }
 
@@ -744,24 +662,14 @@
             const body = document.getElementById('leaderboard-body');
             body.innerHTML = '';
             leaderboard.sort((a,b) => b.points - a.points).forEach((item, i) => {
-                body.innerHTML += `
-                    <tr class="border-b">
-                        <td class="p-3 font-bold">${i+1}</td>
-                        <td class="p-3">${item.name}</td>
-                        <td class="p-3 font-semibold">${item.score} / ${item.total}</td>
-                        <td class="p-3 font-bold text-emerald-600">${item.points} ball</td>
-                    </tr>
-                `;
+                body.innerHTML += `<tr><td><b>${i+1}</b></td><td>${item.name}</td><td>${item.score}/${item.total}</td><td style="color:#059669; font-weight:bold;">${item.points}</td></tr>`;
             });
         }
 
         function checkAdminPassword() {
-            const pass = prompt("Admin parolini kiriting:");
-            if(pass === "8888") {
-                switchTab('admin');
-            } else if(pass !== null) {
-                alert("Parol noto'g'ri!");
-            }
+            const pass = prompt("Admin paroli:");
+            if(pass === "8888") switchTab('admin');
+            else if(pass !== null) alert("Noto'g'ri parol!");
         }
 
         function addQuestion() {
@@ -772,22 +680,18 @@
             const d = document.getElementById('opt-d').value.trim();
             const correct = parseInt(document.getElementById('correct-opt').value);
 
-            if(!text || !a || !b || !c || !d) { alert("Barcha maydonlarni to'ldiring!"); return; }
-
+            if(!text || !a || !b || !c || !d) { alert("Barcha joylarni to'ldiring!"); return; }
             questions.push({ text: text, options: [a, b, c, d], correct: correct });
             localStorage.setItem('bio_questions', JSON.stringify(questions));
             alert("Savol saqlandi!");
-            
             document.getElementById('new-q-text').value = '';
-            document.getElementById('opt-a').value = '';
-            document.getElementById('opt-b').value = '';
-            document.getElementById('opt-c').value = '';
-            document.getElementById('opt-d').value = '';
+            document.getElementById('opt-a').value = ''; document.getElementById('opt-b').value = '';
+            document.getElementById('opt-c').value = ''; document.getElementById('opt-d').value = '';
             loadAdminSettings();
         }
 
         function clearAllData() {
-            if(confirm("Barcha reyting va natijalarni o'chirib tashlamoqchimisiz?")) {
+            if(confirm("Barcha natijalarni o'chirasizmi?")) {
                 leaderboard = [];
                 localStorage.removeItem('bio_leaderboard');
                 alert("Natijalar tozalandi!");
