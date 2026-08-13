@@ -1,2 +1,2 @@
-# Biolog_o-quvchi
+# Biolog_oquvchi
 Biolog Islomjon
