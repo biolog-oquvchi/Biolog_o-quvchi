@@ -5,476 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biolog o'quvchi</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #ecfdf5; color: #1e293b; padding-bottom: 20px; }
-        
-        /* 2 SEKUNDLIK PURE CSS KIRISH EKRANI */
-        #welcome-screen {
-            position: fixed; inset: 0; background: #047857; color: white;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 1000; text-align: center; padding: 20px;
-            animation: fadeOut 0.4s ease 2s forwards;
-            pointer-events: none;
-        }
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
-        }
-        .welcome-card { background: rgba(255, 255, 255, 0.15); padding: 25px; border-radius: 16px; max-width: 350px; width: 100%; }
-
-        /* Header */
-        header { background: #047857; color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header-container { max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 18px; font-weight: bold; }
-        nav { display: flex; gap: 6px; }
-        nav button { border: none; background: transparent; color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
-        nav button.active { background: white; color: #065f46; }
-
-        /* Main layout */
-        main { max-width: 600px; margin: 15px auto; padding: 0 12px; }
-        .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #a7f3d0; margin-bottom: 15px; }
+        /* Asosiy stillar */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; padding-bottom: 20px; }
+        header { background: #047857; color: white; padding: 15px; text-align: center; font-weight: bold; }
+        main { max-width: 500px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 15px; }
         .hidden { display: none !important; }
-
-        /* Form elements */
-        input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-top: 4px; margin-bottom: 12px; }
-        input:focus { border-color: #059669; }
-        label { font-size: 12px; font-weight: bold; color: #334155; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #059669; color: white; font-weight: bold; font-size: 14px; cursor: pointer; }
-        .btn:active { background: #047857; transform: scale(0.99); }
-        .btn-danger { background: #e11d48; }
-
-        /* Quiz elements */
-        .quiz-top { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; }
-        .timer-box { color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 20px; }
-        .q-box { color: #047857; background: #d1fae5; padding: 4px 10px; border-radius: 20px; }
-        .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
-        .option-btn.selected { border-color: #059669; background: #d1fae5; font-weight: bold; }
-
-        /* Admin questions list */
-        .q-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
-        .del-btn { background: #ffe4e6; color: #e11d48; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #ecfdf5; color: #065f46; font-size: 11px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #059669; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin: 10px 0; }
+        .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; margin-bottom: 8px; cursor: pointer; }
+        .option-btn.selected { background: #dcfce7; border-color: #22c55e; }
     </style>
 </head>
 <body>
 
-    <!-- KIRISH EKRANI -->
-    <div id="welcome-screen">
-        <div class="welcome-card">
-            <h1 style="font-size: 20px; margin-bottom: 6px;">Assalomu alaykum!</h1>
-            <p style="font-style: italic; color: #a7f3d0; font-size: 14px;">Bismillahir Rahmanir Rahim</p>
-            <div style="background: white; color: #065f46; font-weight: bold; padding: 6px 12px; border-radius: 20px; font-size: 12px; margin-top: 12px; display: inline-block;">
-                ✨ Testda omad yor bo'lsin!
-            </div>
-        </div>
-    </div>
-
-    <!-- HEADER -->
-    <header>
-        <div class="header-container">
-            <div class="logo">🍃 Biolog o'quvchi</div>
-            <nav>
-                <button onclick="switchTab('quiz')" id="tab-quiz" class="active">Test</button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard">Reyting</button>
-                <button onclick="checkAdminPassword()" id="tab-admin">Admin</button>
-            </nav>
-        </div>
-    </header>
+    <header>🍃 Biolog o'quvchi</header>
 
     <main>
-        <!-- TEST BO'LIMI -->
-        <section id="section-quiz">
-            <div id="start-card" class="card" style="text-align: center;">
-                <h2 style="margin-bottom: 10px;">Testga xush kelibsiz!</h2>
-                <div style="text-align: left;">
-                    <label>Ism va Familiyangiz:</label>
-                    <input type="text" id="student-name" placeholder="Masalan: Ali Valiyev">
-                    <button onclick="startQuiz()" class="btn">Testni boshlash ➔</button>
-                </div>
-            </div>
+        <!-- 1. LOGIN QISMI (Ism kiritish) -->
+        <div id="login-card" class="card">
+            <h3>Xush kelibsiz!</h3>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">Testni boshlash uchun ismingizni kiriting:</p>
+            <input type="text" id="student-name" placeholder="Ism va Familiya">
+            <button onclick="saveAndStart()" class="btn">Testni boshlash</button>
+        </div>
 
-            <div id="quiz-card" class="card hidden">
-                <div class="quiz-top">
-                    <span id="question-count" class="q-box">Savol: 1 / 0</span>
-                    <span class="timer-box">⏱ <span id="timer-val">00:00</span></span>
-                </div>
-                <div id="question-text" style="font-weight: 600; font-size: 15px; margin-bottom: 15px;"></div>
-                <div id="options-container"></div>
-                <div style="text-align: right; margin-top: 15px;">
-                    <button onclick="nextQuestion()" class="btn" style="width: auto; padding: 8px 20px;">Keyingisi ➔</button>
-                </div>
-            </div>
+        <!-- 2. "Qaytgan o'quvchi" uchun karta -->
+        <div id="welcome-back-card" class="card hidden">
+            <h3 id="welcome-msg"></h3>
+            <button onclick="continueQuiz()" class="btn">Testni davom etish</button>
+            <button onclick="changeName()" class="btn" style="background: #64748b; margin-top: 10px;">Ismni o'zgartirish</button>
+        </div>
 
-            <div id="result-card" class="card hidden" style="text-align: center;">
-                <h2 style="color: #059669; margin-bottom: 10px;">Test Yakunlandi!</h2>
-                <div id="score-text" style="font-size: 15px; margin-bottom: 15px;"></div>
-                <p style="font-size: 12px; color: #059669; margin-bottom: 15px;">📲 Natijangiz o'qituvchiga Telegram orqali yuborildi!</p>
-                <button onclick="location.reload()" class="btn">Boshiga qaytish</button>
-            </div>
-        </section>
+        <!-- 3. TEST QISMI -->
+        <div id="quiz-card" class="card hidden">
+            <div id="q-text" style="font-weight: bold; margin-bottom: 15px;"></div>
+            <div id="options-container"></div>
+            <button onclick="nextQuestion()" class="btn">Keyingisi</button>
+        </div>
 
-        <!-- REYTING BO'LIMI -->
-        <section id="section-leaderboard" class="hidden">
-            <div class="card">
-                <h2>🏆 Reyting va Natijalar</h2>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Ism Familiya</th>
-                                <th>To'g'ri</th>
-                                <th>Ball</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ADMIN BO'LIMI -->
-        <section id="section-admin" class="hidden">
-            <div class="card">
-                <h2 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">⚙️ Admin Paneli</h2>
-                
-                <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
-                    <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
-                    <div>
-                        <label>Test Kirish Kodi (Bo'sh qolsa kodsiz):</label>
-                        <input type="text" id="cfg-quiz-pass" placeholder="Masalan: 1234">
-                    </div>
-                    <div class="grid-2">
-                        <div>
-                            <label>Vaqt (daqiqa):</label>
-                            <input type="number" id="cfg-duration" value="15">
-                        </div>
-                        <div>
-                            <label>1 ta savol bali:</label>
-                            <input type="number" step="0.1" id="cfg-points" value="2">
-                        </div>
-                    </div>
-                    <div>
-                        <label>Boshlanish vaqti:</label>
-                        <input type="datetime-local" id="cfg-start">
-                    </div>
-                    <div>
-                        <label>Tugash vaqti:</label>
-                        <input type="datetime-local" id="cfg-end">
-                    </div>
-                    <button onclick="saveSettings()" class="btn">Sozlamalarni saqlash</button>
-                </div>
-
-                <!-- YANGI SAVOL QO'SHISH -->
-                <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;">
-                    <h3 style="font-size: 14px; margin-bottom: 8px;">Yangi Savol Qo'shish</h3>
-                    
-                    <label>Savol Turi:</label>
-                    <select id="q-type" onchange="toggleQType()">
-                        <option value="choice">Yopiq test (ABCD / Variantli)</option>
-                        <option value="text">Ochiq test (Yozma javobli)</option>
-                    </select>
-
-                    <input type="text" id="new-q-text" placeholder="Savol matni">
-
-                    <div id="choice-fields">
-                        <div class="grid-2">
-                            <input type="text" id="opt-a" placeholder="A variant">
-                            <input type="text" id="opt-b" placeholder="B variant">
-                            <input type="text" id="opt-c" placeholder="C variant">
-                            <input type="text" id="opt-d" placeholder="D variant">
-                        </div>
-                        <label>To'g'ri javob varianti:</label>
-                        <select id="correct-opt">
-                            <option value="0">A variant</option>
-                            <option value="1">B variant</option>
-                            <option value="2">C variant</option>
-                            <option value="3">D variant</option>
-                        </select>
-                    </div>
-
-                    <div id="text-fields" class="hidden">
-                        <label>To'g'ri yozma javob matni:</label>
-                        <input type="text" id="correct-text-ans" placeholder="Masalan: Xloroplast">
-                    </div>
-
-                    <button onclick="addQuestion()" class="btn">Savolni saqlash</button>
-                </div>
-
-                <!-- SAVOLLAR RO'YXATI VA O'CHIRISH -->
-                <div>
-                    <h3 style="font-size: 14px; margin-bottom: 8px;">Mavjud Savollar Ro'yxati</h3>
-                    <div id="admin-q-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 10px; padding: 4px; margin-bottom: 10px;"></div>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
-                    <span id="admin-q-count" style="font-size: 12px; font-weight: bold;">Jami savollar: 0 ta</span>
-                    <button onclick="clearAllData()" class="btn btn-danger" style="width: auto; padding: 6px 12px; font-size: 11px;">Natijalarni tozalash</button>
-                </div>
-            </div>
-        </section>
+        <!-- 4. NATIJA -->
+        <div id="result-card" class="card hidden">
+            <h3>Test yakunlandi!</h3>
+            <p id="score-text"></p>
+            <button onclick="location.reload()" class="btn">Bosh sahifa</button>
+        </div>
     </main>
 
     <script>
-        // TELEGRAM SOZLAMALARI
         const TELEGRAM_BOT_TOKEN = "8970538193:AAHUjH0FvHIaw1jjq7XZ2iPhBVM-L2uuyi8";
         const TELEGRAM_CHAT_ID = "244331420";
 
-        // DEFAULT SAVOLLAR (Barchada bir xil chiqadigan testlar)
-        const DEFAULT_QUESTIONS = [
-            { type: "choice", text: "Hujayra nazariyasiga kim asos solgan?", options: ["Shleydan va Shvann", "R.Guk", "Latsenkos", "I.Pavlov"], correct: 0 },
-            { type: "text", text: "Fotosintez jarayoni qaysi organoidda boradi?", correctText: "Xloroplast" }
+        // Boshlang'ich savollar
+        let questions = JSON.parse(localStorage.getItem('bio_questions')) || [
+            { text: "Fotosintez qaysi organoidda boradi?", options: ["Xloroplast", "Mitoxondriya", "Ribosoma", "Yadro"], correct: 0 }
         ];
 
-        let questions = JSON.parse(localStorage.getItem('bio_questions')) || DEFAULT_QUESTIONS;
-        let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
-        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { quizPass: "", duration: 15, points: 2, start: "", end: "" };
+        let currentQ = 0, score = 0, selectedOption = null;
 
-        let currentQ = 0, score = 0, currentStudent = "", selectedOption = null, timerInterval = null, timeLeft = 0;
-
-        function toggleQType() {
-            const type = document.getElementById('q-type').value;
-            if(type === 'choice') {
-                document.getElementById('choice-fields').classList.remove('hidden');
-                document.getElementById('text-fields').classList.add('hidden');
-            } else {
-                document.getElementById('choice-fields').classList.add('hidden');
-                document.getElementById('text-fields').classList.remove('hidden');
+        // Sahifa yuklanganda tekshirish
+        window.onload = () => {
+            const savedName = localStorage.getItem('user_name');
+            if (savedName) {
+                showWelcomeBack(savedName);
             }
+        };
+
+        function showWelcomeBack(name) {
+            document.getElementById('login-card').classList.add('hidden');
+            document.getElementById('welcome-back-card').classList.remove('hidden');
+            document.getElementById('welcome-msg').innerText = "Yana xush kelibsiz, " + name + "!";
         }
 
-        function switchTab(tab) {
-            ['quiz', 'leaderboard', 'admin'].forEach(t => {
-                document.getElementById('section-' + t).classList.add('hidden');
-                document.getElementById('tab-' + t).classList.remove('active');
-            });
-            document.getElementById('section-' + tab).classList.remove('hidden');
-            document.getElementById('tab-' + tab).classList.add('active');
-            if(tab === 'leaderboard') renderLeaderboard();
-            if(tab === 'admin') loadAdminSettings();
+        function saveAndStart() {
+            const name = document.getElementById('student-name').value.trim();
+            if (!name) { alert("Ismingizni yozing!"); return; }
+            localStorage.setItem('user_name', name);
+            continueQuiz();
         }
 
-        function saveSettings() {
-            settings.quizPass = document.getElementById('cfg-quiz-pass').value.trim();
-            settings.duration = parseInt(document.getElementById('cfg-duration').value) || 15;
-            settings.points = parseFloat(document.getElementById('cfg-points').value) || 2;
-            settings.start = document.getElementById('cfg-start').value;
-            settings.end = document.getElementById('cfg-end').value;
-            localStorage.setItem('bio_settings', JSON.stringify(settings));
-            alert("Saqlandi!");
+        function changeName() {
+            localStorage.removeItem('user_name');
+            location.reload();
         }
 
-        function loadAdminSettings() {
-            document.getElementById('cfg-quiz-pass').value = settings.quizPass || "";
-            document.getElementById('cfg-duration').value = settings.duration || 15;
-            document.getElementById('cfg-points').value = settings.points || 2;
-            document.getElementById('cfg-start').value = settings.start || "";
-            document.getElementById('cfg-end').value = settings.end || "";
-            document.getElementById('admin-q-count').innerText = `Jami savollar: ${questions.length} ta`;
-            renderAdminQList();
-        }
-
-        function renderAdminQList() {
-            const listEl = document.getElementById('admin-q-list');
-            listEl.innerHTML = '';
-            if(questions.length === 0) {
-                listEl.innerHTML = `<div style="text-align:center; padding:10px; font-size:12px; color:#94a3b8;">Savollar yo'q</div>`;
-                return;
-            }
-            questions.forEach((q, idx) => {
-                const typeTag = (q.type === 'text') ? '[Ochiq]' : '[ABCD]';
-                listEl.innerHTML += `
-                    <div class="q-item">
-                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80%;">
-                            <b>${idx+1}.</b> <i style="color:#059669">${typeTag}</i> ${q.text}
-                        </span>
-                        <button class="del-btn" onclick="deleteQuestion(${idx})">🗑 O'chirish</button>
-                    </div>
-                `;
-            });
-        }
-
-        function deleteQuestion(index) {
-            if(confirm("Ushbu savolni o'chirmoqchimisiz?")) {
-                questions.splice(index, 1);
-                localStorage.setItem('bio_questions', JSON.stringify(questions));
-                loadAdminSettings();
-            }
-        }
-
-        function startQuiz() {
-            const nameInput = document.getElementById('student-name').value.trim();
-            if(!nameInput) { alert("Ismingizni kiriting!"); return; }
-            if(questions.length === 0) { alert("Savollar topilmadi!"); return; }
-
-            const now = new Date();
-            if(settings.start && new Date(settings.start) > now) { alert("Test hali boshlanmagan!"); return; }
-            if(settings.end && new Date(settings.end) < now) { alert("Test vaqti tugagan!"); return; }
-
-            if(settings.quizPass && settings.quizPass !== "") {
-                const userCode = prompt("Testga kirish kodini kiriting:");
-                if(userCode !== settings.quizPass) { alert("Test kodi noto'g'ri!"); return; }
-            }
-
-            currentStudent = nameInput; currentQ = 0; score = 0;
-            document.getElementById('start-card').classList.add('hidden');
+        function continueQuiz() {
+            document.getElementById('login-card').classList.add('hidden');
+            document.getElementById('welcome-back-card').classList.add('hidden');
             document.getElementById('quiz-card').classList.remove('hidden');
-            startTimer(settings.duration * 60);
             showQuestion();
         }
 
-        function startTimer(seconds) {
-            timeLeft = seconds;
-            const timerEl = document.getElementById('timer-val');
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                const s = (timeLeft % 60).toString().padStart(2, '0');
-                if(timerEl) timerEl.innerText = `${m}:${s}`;
-                if(timeLeft <= 0) { clearInterval(timerInterval); alert("Vaqtingiz tugadi!"); finishQuiz(); }
-            }, 1000);
-        }
-
         function showQuestion() {
-            selectedOption = null;
             const q = questions[currentQ];
-            document.getElementById('question-count').innerText = `Savol: ${currentQ + 1} / ${questions.length}`;
-            document.getElementById('question-text').innerText = q.text;
-            
-            const optsBox = document.getElementById('options-container');
-            optsBox.innerHTML = '';
-
-            if(q.type === 'text') {
-                optsBox.innerHTML = `
-                    <label style="margin-bottom: 4px; display:block;">Javobingizni yozing:</label>
-                    <input type="text" id="open-ans-input" placeholder="Javobingizni shu yerga kiriting..." style="margin-bottom:0;">
-                `;
-            } else {
-                q.options.forEach((opt, idx) => {
-                    const btn = document.createElement('button');
-                    btn.className = "option-btn";
-                    btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
-                    btn.onclick = () => {
-                        const children = optsBox.children;
-                        for(let i=0; i<children.length; i++) children[i].classList.remove('selected');
-                        btn.classList.add('selected');
-                        selectedOption = idx;
-                    };
-                    optsBox.appendChild(btn);
-                });
-            }
-        }
-
-        function nextQuestion() {
-            const q = questions[currentQ];
-
-            if(q.type === 'text') {
-                const userAns = document.getElementById('open-ans-input').value.trim().toLowerCase();
-                if(!userAns) { alert("Javobingizni kiriting!"); return; }
-                if(userAns === q.correctText.trim().toLowerCase()) { score++; }
-            } else {
-                if(selectedOption === null) { alert("Javob tanlang!"); return; }
-                if(selectedOption === q.correct) { score++; }
-            }
-
-            currentQ++;
-            if(currentQ < questions.length) showQuestion();
-            else finishQuiz();
-        }
-
-        function finishQuiz() {
-            clearInterval(timerInterval);
-            document.getElementById('quiz-card').classList.add('hidden');
-            document.getElementById('result-card').classList.remove('hidden');
-            const totalPoints = (score * settings.points).toFixed(1);
-            const maxPoints = (questions.length * settings.points).toFixed(1);
-            
-            document.getElementById('score-text').innerHTML = `
-                <b>${currentStudent}</b>,<br>Siz <b>${questions.length}</b> ta savoldan <b>${score} ta</b>siga to'g'ri javob berdingiz.<br>
-                <div style="margin-top:10px; font-weight:bold; color:#047857; font-size:18px;">
-                    To'plangan ball: ${totalPoints} / ${maxPoints}
-                </div>
-            `;
-
-            leaderboard.push({ name: currentStudent, score: score, total: questions.length, points: totalPoints });
-            localStorage.setItem('bio_leaderboard', JSON.stringify(leaderboard));
-
-            // TELEGRAMGA XABAR YUBORISH
-            sendToTelegram(currentStudent, score, questions.length, totalPoints, maxPoints);
-        }
-
-        function sendToTelegram(student, correct, total, points, maxPoints) {
-            const text = `📊 *YANGI TEST NATIJASI*\n\n` +
-                         `👤 *O'quvchi:* ${student}\n` +
-                         `✅ *Natija:* ${correct} / ${total} ta\n` +
-                         `⭐ *Ball:* ${points} / ${maxPoints}\n` +
-                         `📅 *Vaqt:* ${new Date().toLocaleString('uz-UZ')}`;
-
-            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: text,
-                    parse_mode: 'Markdown'
-                })
-            }).catch(e => console.error('Telegram error:', e));
-        }
-
-        function renderLeaderboard() {
-            const body = document.getElementById('leaderboard-body');
-            body.innerHTML = '';
-            leaderboard.sort((a,b) => b.points - a.points).forEach((item, i) => {
-                body.innerHTML += `<tr><td><b>${i+1}</b></td><td>${item.name}</td><td>${item.score}/${item.total}</td><td style="color:#059669; font-weight:bold;">${item.points}</td></tr>`;
+            document.getElementById('q-text').innerText = (currentQ+1) + ". " + q.text;
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedOption = idx;
+                };
+                container.appendChild(btn);
             });
         }
 
-        function checkAdminPassword() {
-            const pass = prompt("Admin paroli:");
-            if(pass === "8888") switchTab('admin');
-            else if(pass !== null) alert("Noto'g'ri parol!");
-        }
-
-        function addQuestion() {
-            const type = document.getElementById('q-type').value;
-            const text = document.getElementById('new-q-text').value.trim();
-
-            if(!text) { alert("Savol matnini kiriting!"); return; }
-
-            if(type === 'text') {
-                const correctText = document.getElementById('correct-text-ans').value.trim();
-                if(!correctText) { alert("To'g'ri yozma javobni kiriting!"); return; }
-                questions.push({ type: "text", text: text, correctText: correctText });
-                document.getElementById('correct-text-ans').value = '';
+        function nextQuestion() {
+            if (selectedOption === null) { alert("Javob tanlang!"); return; }
+            if (selectedOption === questions[currentQ].correct) score++;
+            
+            currentQ++;
+            if (currentQ < questions.length) {
+                showQuestion();
             } else {
-                const a = document.getElementById('opt-a').value.trim();
-                const b = document.getElementById('opt-b').value.trim();
-                const c = document.getElementById('opt-c').value.trim();
-                const d = document.getElementById('opt-d').value.trim();
-                const correct = parseInt(document.getElementById('correct-opt').value);
-
-                if(!a || !b || !c || !d) { alert("Barcha variantlarni to'ldiring!"); return; }
-                questions.push({ type: "choice", text: text, options: [a, b, c, d], correct: correct });
-                document.getElementById('opt-a').value = ''; document.getElementById('opt-b').value = '';
-                document.getElementById('opt-c').value = ''; document.getElementById('opt-d').value = '';
+                finishQuiz();
             }
-
-            localStorage.setItem('bio_questions', JSON.stringify(questions));
-            alert("Savol saqlandi!");
-            document.getElementById('new-q-text').value = '';
-            loadAdminSettings();
         }
 
-        function clearAllData() {
-            if(confirm("Natijalarni o'chirasizmi?")) {
-                leaderboard = [];
-                localStorage.removeItem('bio_leaderboard');
-                alert("Tozalandi!");
-            }
+        function finishQuiz() {
+            const name = localStorage.getItem('user_name');
+            document.getElementById('quiz-card').classList.add('hidden');
+            document.getElementById('result-card').classList.remove('hidden');
+            document.getElementById('score-text').innerText = name + ", siz " + questions.length + " ta savoldan " + score + " tasiga to'g'ri javob berdingiz.";
+            
+            // Telegramga yuborish
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: `📊 ${name}: ${score}/${questions.length} ball` })
+            });
         }
     </script>
 </body>
