@@ -1,0 +1,290 @@
+Siz uchun "Biolog o'quvchi" deb nomlangan, yangi testlarni o'zingiz dinamik ravishda qo'shib borishingiz mumkin bo'lgan onlayn test platformasi loyihasini tayyorladim.
+Hozirning o'zida pastdagi interaktiv oynada O'qituvchi kabineti (yangi savol kiritish) va O'quvchi rejimi (test topshirish) qanday ishlashini amalda sinab ko'rishingiz mumkin:
+💻 Ushbu saytni o'zingizda to'liq ishga tushirish (1 ta fayl)
+Ushbu platformani kompyuteringiz yoki telefoningizda saqlab olishingiz uchun to'liq HTML + CSS + JavaScript kodini taqdim etaman.
+Barcha kiritgan savollaringiz brauzer xotirasida (localStorage) avtomatik saqlanib boradi, ya'ni saytni yopsangiz ham savollaringiz o'chib ketmaydi.
+📝 Bajarish tartibi:
+ * Kompyuteringizda Notepad (Блокнот) yoki istalgan kod tahrirlovchini oching.
+ * Quyidagi kodni nusxalab (copy), yangi faylga joylang.
+ * Faylni biolog_oquvchi.html nomi bilan saqlang (fayl turi: All Files / Все файлы).
+ * Hosil bo'lgan faylni ixtiyoriy brauzerda (Chrome, Edge, Opera) oching!
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biolog o'quvchi — Onlayn Test Platformasi</title>
+    <!-- Tailwind CSS interfeys uchun -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-emerald-50 min-h-screen text-slate-800 font-sans">
+
+    <!-- Navbar -->
+    <header class="bg-emerald-700 text-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid font-bold text-2xl fa-leaf"></i>
+                <h1 class="text-xl font-bold tracking-wide">Biolog o'quvchi</h1>
+            </div>
+            <nav class="flex space-x-2">
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-white text-emerald-800 shadow">
+                    <i class="fa-solid fa-pen-to-square mr-1"></i> Test Topshirish
+                </button>
+                <button onclick="switchTab('admin')" id="tab-admin" class="px-4 py-2 rounded-lg text-sm font-semibold transition hover:bg-emerald-600">
+                    <i class="fa-solid fa-plus mr-1"></i> Savol Qo'shish (Admin)
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-3xl mx-auto p-4 mt-6">
+
+        <!-- 1. O'QUVCHI TEST TOP SHIRISH BO'LIMI -->
+        <section id="section-quiz" class="block">
+            <div id="quiz-card" class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6">
+                <!-- Header Status -->
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <span id="question-count" class="text-sm font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+                        Savol 1
+                    </span>
+                    <span id="quiz-score" class="text-sm font-semibold text-slate-500">
+                        Natija: 0
+                    </span>
+                </div>
+
+                <!-- Question Text -->
+                <h2 id="question-text" class="text-lg font-bold text-slate-800 mb-6">
+                    Savollar yuklanmoqda...
+                </h2>
+
+                <!-- Options List -->
+                <div id="options-container" class="space-y-3"></div>
+
+                <!-- Explanation Box -->
+                <div id="explanation-box" class="hidden mt-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm">
+                    <strong><i class="fa-solid fa-lightbulb mr-1"></i> Izoh:</strong>
+                    <p id="explanation-text" class="mt-1"></p>
+                </div>
+
+                <!-- Footer Navigation -->
+                <div class="mt-6 flex justify-end">
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow transition">
+                        Keyingi savol <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Box -->
+            <div id="result-card" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-100 p-8 text-center">
+                <i class="fa-solid fa-trophy text-5xl text-amber-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Test yakunlandi!</h2>
+                <p id="final-score" class="text-lg text-slate-600 mb-6"></p>
+                <button onclick="restartQuiz()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow">
+                    Qayta topshirish
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. O'QITUVCHI SAVOL QO'SHISH BO'LIMI -->
+        <section id="section-admin" class="hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6">
+                <h2 class="text-xl font-bold text-slate-800 mb-4 pb-2 border-b flex items-center">
+                    <i class="fa-solid fa-circle-plus text-emerald-600 mr-2"></i> Yangi test savolini kiritish
+                </h2>
+
+                <form id="add-question-form" onsubmit="saveQuestion(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Savol matni:</label>
+                        <textarea id="input-question" required rows="3" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Masalan: DNK replikatsiyasida qaysi ferment ishtirok etadi?"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">A) Variant:</label>
+                            <input type="text" id="input-opt-0" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">B) Variant:</label>
+                            <input type="text" id="input-opt-1" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">C) Variant:</label>
+                            <input type="text" id="input-opt-2" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">D) Variant:</label>
+                            <input type="text" id="input-opt-3" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">To'g'ri javobni tanlang:</label>
+                        <select id="input-correct" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="0">A varianti</option>
+                            <option value="1">B varianti</option>
+                            <option value="2">C varianti</option>
+                            <option value="3">D varianti</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Ilmiy izoh / Tushuntirish (Ixtiyoriy):</label>
+                        <input type="text" id="input-explanation" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="O'quvchi javob bergandan so'ng ko'rinadigan izoh">
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i> Savolni Saqlash
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Boshlang'ich namuna savollar
+        const defaultQuestions = [
+            {
+                question: "Odam genomi nechta juft xromosomadan tashkil topgan?",
+                options: ["22 juft", "23 juft", "46 juft", "24 juft"],
+                correct: 1,
+                explanation: "Odam hujayrasida 23 juft (jami 46 ta) xromosoma mavjud."
+            },
+            {
+                question: "Fotosintezning yorug'lik bosqichida qanday modda ajralib chiqadi?",
+                options: ["Karbonat angidrid", "Glyukoza", "Kislorod", "Ozon"],
+                correct: 2,
+                explanation: "Suv molekulasining fotolizi natijasida erkin kislorod (O2) ajraladi."
+            }
+        ];
+
+        // LocalStorage'dan savollarni yuklash
+        let questions = JSON.parse(localStorage.getItem('biolog_questions')) || defaultQuestions;
+        let currentQIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function saveToStorage() {
+            localStorage.setItem('biolog_questions', JSON.stringify(questions));
+        }
+
+        function switchTab(tab) {
+            const quizSec = document.getElementById('section-quiz');
+            const adminSec = document.getElementById('section-admin');
+            const tabQuiz = document.getElementById('tab-quiz');
+            const tabAdmin = document.getElementById('tab-admin');
+
+            if (tab === 'quiz') {
+                quizSec.classList.remove('hidden');
+                adminSec.classList.add('hidden');
+                tabQuiz.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-white text-emerald-800 shadow";
+                tabAdmin.className = "px-4 py-2 rounded-lg text-sm font-semibold transition hover:bg-emerald-600 text-white";
+                restartQuiz();
+            } else {
+                quizSec.classList.add('hidden');
+                adminSec.classList.remove('hidden');
+                tabAdmin.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-white text-emerald-800 shadow";
+                tabQuiz.className = "px-4 py-2 rounded-lg text-sm font-semibold transition hover:bg-emerald-600 text-white";
+            }
+        }
+
+        function renderQuestion() {
+            if (questions.length === 0) {
+                document.getElementById('question-text').innerText = "Hozircha savollar kiritilmagan.";
+                document.getElementById('options-container').innerHTML = "";
+                return;
+            }
+
+            const q = questions[currentQIndex];
+            document.getElementById('question-count').innerText = `Savol ${currentQIndex + 1} / ${questions.length}`;
+            document.getElementById('question-text').innerText = q.question;
+            document.getElementById('explanation-box').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            answered = false;
+
+            const optsDiv = document.getElementById('options-container');
+            optsDiv.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex items-center justify-between";
+                btn.innerHTML = `<span class="font-medium"><strong class="mr-2">${String.fromCharCode(65 + idx)})</strong> ${opt}</span>`;
+                btn.onclick = () => selectOption(idx, btn);
+                optsDiv.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIdx, element) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQIndex];
+            const optsContainer = document.getElementById('options-container');
+            const buttons = optsContainer.querySelectorAll('button');
+
+            if (selectedIdx === q.correct) {
+                element.className = "w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-900 font-bold flex items-center justify-between";
+                score++;
+                document.getElementById('quiz-score').innerText = `Natija: ${score}`;
+            } else {
+                element.className = "w-full text-left p-4 rounded-xl border-2 border-rose-500 bg-rose-100 text-rose-900 font-bold flex items-center justify-between";
+                buttons[q.correct].className = "w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-900 font-bold flex items-center justify-between";
+            }
+
+            if (q.explanation) {
+                document.getElementById('explanation-text').innerText = q.explanation;
+                document.getElementById('explanation-box').classList.remove('hidden');
+            }
+
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                renderQuestion();
+            } else {
+                document.getElementById('quiz-card').classList.add('hidden');
+                document.getElementById('result-card').classList.remove('hidden');
+                document.getElementById('final-score').innerText = `Siz ${questions.length} ta savoldan ${score} tasiga to'g'ri javob berdingiz!`;
+            }
+        }
+
+        function restartQuiz() {
+            currentQIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = "Natija: 0";
+            document.getElementById('result-card').classList.add('hidden');
+            document.getElementById('quiz-card').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function saveQuestion(e) {
+            e.preventDefault();
+            const newQ = {
+                question: document.getElementById('input-question').value,
+                options: [
+                    document.getElementById('input-opt-0').value,
+                    document.getElementById('input-opt-1').value,
+                    document.getElementById('input-opt-2').value,
+                    document.getElementById('input-opt-3').value
+                ],
+                correct: parseInt(document.getElementById('input-correct').value),
+                explanation: document.getElementById('input-explanation').value
+            };
+
+            questions.push(newQ);
+            saveToStorage();
+
+            alert("Savol muvaffaqiyatli saqlandi!");
+            document.getElementById('add-question-form').reset();
+            switchTab('quiz');
+        }
+
+        // Boshlanishida testni yuklash
+        renderQuestion();
+    </script>
+</body>
+</html>
+
