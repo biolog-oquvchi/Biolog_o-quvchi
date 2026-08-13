@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biolog o'quvchi - Onlayn Test Platformasi</title>
+    <title>Biolog o'quvchi</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: #ecfdf5; color: #1e293b; padding-bottom: 20px; }
         
-        /* Kirish ekrani */
+        /* ULTRA-LIGHTWELCOME SCREEN (Faqat Pure CSS 2s) */
         #welcome-screen {
             position: fixed; inset: 0; background: #047857; color: white;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; text-align: center; padding: 20px; transition: opacity 0.5s ease;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; text-align: center; padding: 20px;
+            animation: fadeOut 0.4s ease 2s forwards;
+            pointer-events: none;
         }
-        .welcome-card { background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 16px; max-width: 380px; width: 100%; }
-        .welcome-badge { display: inline-block; background: white; color: #065f46; font-weight: bold; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin-top: 15px; }
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+        .welcome-card { background: rgba(255, 255, 255, 0.15); padding: 25px; border-radius: 16px; max-width: 350px; width: 100%; }
 
         /* Header */
         header { background: #047857; color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .header-container { max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+        .logo { font-size: 18px; font-weight: bold; }
         nav { display: flex; gap: 6px; }
         nav button { border: none; background: transparent; color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
         nav button.active { background: white; color: #065f46; }
@@ -35,32 +39,32 @@
         input:focus { border-color: #059669; }
         label { font-size: 12px; font-weight: bold; color: #334155; }
         .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #059669; color: white; font-weight: bold; font-size: 14px; cursor: pointer; }
-        .btn:active { background: #047857; }
+        .btn:active { background: #047857; transform: scale(0.99); }
         .btn-danger { background: #e11d48; }
 
-        /* Test va Javoblar */
+        /* Test bo'limi */
         .quiz-top { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; }
         .timer-box { color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 20px; }
         .q-box { color: #047857; background: #d1fae5; padding: 4px 10px; border-radius: 20px; }
         .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
         .option-btn.selected { border-color: #059669; background: #d1fae5; font-weight: bold; }
 
-        /* Jadvallar */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #ecfdf5; color: #065f46; font-size: 11px; text-transform: uppercase; }
-        
+        th { background: #ecfdf5; color: #065f46; font-size: 11px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     </style>
 </head>
 <body>
 
-    <!-- KIRISH EKRANI (2 sekund) -->
+    <!-- KIRISH EKRANI (JS shart emas, CSS o'zi 2sekundda yopiladi) -->
     <div id="welcome-screen">
         <div class="welcome-card">
-            <h1 style="font-size: 22px; margin-bottom: 8px;">Assalomu alaykum!</h1>
-            <p style="font-style: italic; color: #a7f3d0; margin-bottom: 10px;">Bismillahir Rahmanir Rahim</p>
-            <div class="welcome-badge">✨ Testda omad yor bo'lsin!</div>
+            <h1 style="font-size: 20px; margin-bottom: 6px;">Assalomu alaykum!</h1>
+            <p style="font-style: italic; color: #a7f3d0; font-size: 14px;">Bismillahir Rahmanir Rahim</p>
+            <div style="background: white; color: #065f46; font-weight: bold; padding: 6px 12px; border-radius: 20px; font-size: 12px; margin-top: 12px; display: inline-block;">
+                ✨ Testda omad yor bo'lsin!
+            </div>
         </div>
     </div>
 
@@ -81,7 +85,6 @@
         <section id="section-quiz">
             <div id="start-card" class="card" style="text-align: center;">
                 <h2 style="margin-bottom: 10px;">Testga xush kelibsiz!</h2>
-                <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Testni boshlash uchun ism-familiyangizni kiriting:</p>
                 <div style="text-align: left;">
                     <label>Ism va Familiyangiz:</label>
                     <input type="text" id="student-name" placeholder="Masalan: Ali Valiyev">
@@ -92,7 +95,7 @@
             <div id="quiz-card" class="card hidden">
                 <div class="quiz-top">
                     <span id="question-count" class="q-box">Savol: 1 / 0</span>
-                    <span id="timer" class="timer-box">⏱ 00:00</span>
+                    <span class="timer-box">⏱ <span id="timer-val">00:00</span></span>
                 </div>
                 <div id="question-text" style="font-weight: 600; font-size: 15px; margin-bottom: 15px;"></div>
                 <div id="options-container"></div>
@@ -133,15 +136,12 @@
             <div class="card">
                 <h2 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">⚙️ Admin Paneli</h2>
                 
-                <!-- SOZLAMALAR -->
                 <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
                     <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
-                    
                     <div>
-                        <label>Testga kirish kodi (Kodsiz bo'lishi uchun bo'sh qoldiring):</label>
-                        <input type="text" id="cfg-quiz-pass" placeholder="Masalan: 1234 yoki bo'sh qoldiring">
+                        <label>Test Kirish Kodi (Bo'sh qolsa kodsiz bo'ladi):</label>
+                        <input type="text" id="cfg-quiz-pass" placeholder="Masalan: 1234">
                     </div>
-
                     <div class="grid-2">
                         <div>
                             <label>Vaqt (daqiqa):</label>
@@ -163,7 +163,6 @@
                     <button onclick="saveSettings()" class="btn">Sozlamalarni saqlash</button>
                 </div>
 
-                <!-- SAVOL QO'SHISH -->
                 <div>
                     <h3 style="font-size: 14px; margin-bottom: 8px;">Yangi Savol Qo'shish</h3>
                     <input type="text" id="new-q-text" placeholder="Savol matni">
@@ -192,14 +191,8 @@
     </main>
 
     <script>
-        setTimeout(() => {
-            const w = document.getElementById('welcome-screen');
-            if(w) { w.style.opacity = '0'; setTimeout(() => w.style.display = 'none', 500); }
-        }, 2000);
-
         let questions = JSON.parse(localStorage.getItem('bio_questions')) || [
-            { text: "Hujayra nazariyasiga kim asos solgan?", options: ["Shleydan va Shvann", "R.Guk", "Latsenkos", "I.Pavlov"], correct: 0 },
-            { text: "Fotosintez jarayoni qaysi organoidda boradi?", options: ["MitoXondriya", "Xloroplast", "Ribosoma", "Lizosoma"], correct: 1 }
+            { text: "Hujayra nazariyasiga kim asos solgan?", options: ["Shleydan va Shvann", "R.Guk", "Latsenkos", "I.Pavlov"], correct: 0 }
         ];
         let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
         let settings = JSON.parse(localStorage.getItem('bio_settings')) || { quizPass: "", duration: 15, points: 2, start: "", end: "" };
@@ -224,7 +217,7 @@
             settings.start = document.getElementById('cfg-start').value;
             settings.end = document.getElementById('cfg-end').value;
             localStorage.setItem('bio_settings', JSON.stringify(settings));
-            alert("Sozlamalar saqlandi!");
+            alert("Saqlandi!");
         }
 
         function loadAdminSettings() {
@@ -245,13 +238,9 @@
             if(settings.start && new Date(settings.start) > now) { alert("Test hali boshlanmagan!"); return; }
             if(settings.end && new Date(settings.end) < now) { alert("Test vaqti tugagan!"); return; }
 
-            // TESTGA KIRISH KODI TEKSHIRUVI
             if(settings.quizPass && settings.quizPass !== "") {
                 const userCode = prompt("Testga kirish kodini kiriting:");
-                if(userCode !== settings.quizPass) {
-                    alert("Test kirish kodi noto'g'ri!");
-                    return;
-                }
+                if(userCode !== settings.quizPass) { alert("Test kodi noto'g'ri!"); return; }
             }
 
             currentStudent = nameInput; currentQ = 0; score = 0;
@@ -263,19 +252,15 @@
 
         function startTimer(seconds) {
             timeLeft = seconds;
-            updateTimerDisplay();
+            const timerEl = document.getElementById('timer-val');
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 timeLeft--;
-                updateTimerDisplay();
+                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                const s = (timeLeft % 60).toString().padStart(2, '0');
+                if(timerEl) timerEl.innerText = `${m}:${s}`;
                 if(timeLeft <= 0) { clearInterval(timerInterval); alert("Vaqtingiz tugadi!"); finishQuiz(); }
             }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-            const s = (timeLeft % 60).toString().padStart(2, '0');
-            document.getElementById('timer').innerText = `⏱ ${m}:${s}`;
         }
 
         function showQuestion() {
@@ -291,7 +276,8 @@
                 btn.className = "option-btn";
                 btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
                 btn.onclick = () => {
-                    Array.from(optsBox.children).forEach(c => c.classList.remove('selected'));
+                    const children = optsBox.children;
+                    for(let i=0; i<children.length; i++) children[i].classList.remove('selected');
                     btn.classList.add('selected');
                     selectedOption = idx;
                 };
@@ -345,7 +331,7 @@
             const d = document.getElementById('opt-d').value.trim();
             const correct = parseInt(document.getElementById('correct-opt').value);
 
-            if(!text || !a || !b || !c || !d) { alert("Barcha joylarni to'ldiring!"); return; }
+            if(!text || !a || !b || !c || !d) { alert("To'ldiring!"); return; }
             questions.push({ text: text, options: [a, b, c, d], correct: correct });
             localStorage.setItem('bio_questions', JSON.stringify(questions));
             alert("Savol saqlandi!");
@@ -356,377 +342,10 @@
         }
 
         function clearAllData() {
-            if(confirm("Barcha natijalarni o'chirasizmi?")) {
+            if(confirm("Natijalarni o'chirasizmi?")) {
                 leaderboard = [];
                 localStorage.removeItem('bio_leaderboard');
-                alert("Natijalar tozalandi!");
-            }
-        }
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biolog o'quvchi - Onlayn Test Platformasi</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: #ecfdf5; color: #1e293b; padding-bottom: 20px; }
-        
-        /* Kirish ekrani */
-        #welcome-screen {
-            position: fixed; inset: 0; background: #047857; color: white;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; text-align: center; padding: 20px; transition: opacity 0.5s ease;
-        }
-        .welcome-card { background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 16px; max-width: 380px; width: 100%; }
-        .welcome-badge { display: inline-block; background: white; color: #065f46; font-weight: bold; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin-top: 15px; }
-
-        /* Header */
-        header { background: #047857; color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header-container { max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
-        nav { display: flex; gap: 6px; }
-        nav button { border: none; background: transparent; color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
-        nav button.active { background: white; color: #065f46; }
-
-        /* Asosiy qism */
-        main { max-width: 600px; margin: 15px auto; padding: 0 12px; }
-        .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #a7f3d0; margin-bottom: 15px; }
-        .hidden { display: none !important; }
-
-        /* Form va elementlar */
-        input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-top: 4px; margin-bottom: 12px; }
-        input:focus { border-color: #059669; }
-        label { font-size: 12px; font-weight: bold; color: #334155; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #059669; color: white; font-weight: bold; font-size: 14px; cursor: pointer; }
-        .btn:active { background: #047857; }
-        .btn-danger { background: #e11d48; }
-
-        /* Test va Javoblar */
-        .quiz-top { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; }
-        .timer-box { color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 20px; }
-        .q-box { color: #047857; background: #d1fae5; padding: 4px 10px; border-radius: 20px; }
-        .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
-        .option-btn.selected { border-color: #059669; background: #d1fae5; font-weight: bold; }
-
-        /* Jadvallar */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #ecfdf5; color: #065f46; font-size: 11px; text-transform: uppercase; }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    </style>
-</head>
-<body>
-
-    <!-- KIRISH EKRANI (2 sekund) -->
-    <div id="welcome-screen">
-        <div class="welcome-card">
-            <h1 style="font-size: 22px; margin-bottom: 8px;">Assalomu alaykum!</h1>
-            <p style="font-style: italic; color: #a7f3d0; margin-bottom: 10px;">Bismillahir Rahmanir Rahim</p>
-            <div class="welcome-badge">✨ Testda omad yor bo'lsin!</div>
-        </div>
-    </div>
-
-    <!-- HEADER -->
-    <header>
-        <div class="header-container">
-            <div class="logo">🍃 Biolog o'quvchi</div>
-            <nav>
-                <button onclick="switchTab('quiz')" id="tab-quiz" class="active">Test</button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard">Reyting</button>
-                <button onclick="checkAdminPassword()" id="tab-admin">Admin</button>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <!-- TEST BO'LIMI -->
-        <section id="section-quiz">
-            <div id="start-card" class="card" style="text-align: center;">
-                <h2 style="margin-bottom: 10px;">Testga xush kelibsiz!</h2>
-                <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Testni boshlash uchun ism-familiyangizni kiriting:</p>
-                <div style="text-align: left;">
-                    <label>Ism va Familiyangiz:</label>
-                    <input type="text" id="student-name" placeholder="Masalan: Ali Valiyev">
-                    <button onclick="startQuiz()" class="btn">Testni boshlash ➔</button>
-                </div>
-            </div>
-
-            <div id="quiz-card" class="card hidden">
-                <div class="quiz-top">
-                    <span id="question-count" class="q-box">Savol: 1 / 0</span>
-                    <span id="timer" class="timer-box">⏱ 00:00</span>
-                </div>
-                <div id="question-text" style="font-weight: 600; font-size: 15px; margin-bottom: 15px;"></div>
-                <div id="options-container"></div>
-                <div style="text-align: right; margin-top: 15px;">
-                    <button onclick="nextQuestion()" class="btn" style="width: auto; padding: 8px 20px;">Keyingisi ➔</button>
-                </div>
-            </div>
-
-            <div id="result-card" class="card hidden" style="text-align: center;">
-                <h2 style="color: #059669; margin-bottom: 10px;">Test Yakunlandi!</h2>
-                <div id="score-text" style="font-size: 15px; margin-bottom: 15px;"></div>
-                <button onclick="location.reload()" class="btn">Boshiga qaytish</button>
-            </div>
-        </section>
-
-        <!-- REYTING BO'LIMI -->
-        <section id="section-leaderboard" class="hidden">
-            <div class="card">
-                <h2>🏆 Reyting va Natijalar</h2>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Ism Familiya</th>
-                                <th>To'g'ri</th>
-                                <th>Ball</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ADMIN BO'LIMI -->
-        <section id="section-admin" class="hidden">
-            <div class="card">
-                <h2 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">⚙️ Admin Paneli</h2>
-                
-                <!-- SOZLAMALAR -->
-                <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
-                    <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
-                    
-                    <div>
-                        <label>Testga kirish kodi (Kodsiz bo'lishi uchun bo'sh qoldiring):</label>
-                        <input type="text" id="cfg-quiz-pass" placeholder="Masalan: 1234 yoki bo'sh qoldiring">
-                    </div>
-
-                    <div class="grid-2">
-                        <div>
-                            <label>Vaqt (daqiqa):</label>
-                            <input type="number" id="cfg-duration" value="15">
-                        </div>
-                        <div>
-                            <label>1 ta savol bali:</label>
-                            <input type="number" step="0.1" id="cfg-points" value="2">
-                        </div>
-                    </div>
-                    <div>
-                        <label>Boshlanish vaqti:</label>
-                        <input type="datetime-local" id="cfg-start">
-                    </div>
-                    <div>
-                        <label>Tugash vaqti:</label>
-                        <input type="datetime-local" id="cfg-end">
-                    </div>
-                    <button onclick="saveSettings()" class="btn">Sozlamalarni saqlash</button>
-                </div>
-
-                <!-- SAVOL QO'SHISH -->
-                <div>
-                    <h3 style="font-size: 14px; margin-bottom: 8px;">Yangi Savol Qo'shish</h3>
-                    <input type="text" id="new-q-text" placeholder="Savol matni">
-                    <div class="grid-2">
-                        <input type="text" id="opt-a" placeholder="A variant">
-                        <input type="text" id="opt-b" placeholder="B variant">
-                        <input type="text" id="opt-c" placeholder="C variant">
-                        <input type="text" id="opt-d" placeholder="D variant">
-                    </div>
-                    <label>To'g'ri javob:</label>
-                    <select id="correct-opt">
-                        <option value="0">A variant</option>
-                        <option value="1">B variant</option>
-                        <option value="2">C variant</option>
-                        <option value="3">D variant</option>
-                    </select>
-                    <button onclick="addQuestion()" class="btn">Savolni saqlash</button>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
-                    <span id="admin-q-count" style="font-size: 12px; font-weight: bold;">Jami savollar: 0 ta</span>
-                    <button onclick="clearAllData()" class="btn btn-danger" style="width: auto; padding: 6px 12px; font-size: 11px;">Natijalarni tozalash</button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        setTimeout(() => {
-            const w = document.getElementById('welcome-screen');
-            if(w) { w.style.opacity = '0'; setTimeout(() => w.style.display = 'none', 500); }
-        }, 2000);
-
-        let questions = JSON.parse(localStorage.getItem('bio_questions')) || [
-            { text: "Hujayra nazariyasiga kim asos solgan?", options: ["Shleydan va Shvann", "R.Guk", "Latsenkos", "I.Pavlov"], correct: 0 },
-            { text: "Fotosintez jarayoni qaysi organoidda boradi?", options: ["MitoXondriya", "Xloroplast", "Ribosoma", "Lizosoma"], correct: 1 }
-        ];
-        let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
-        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { quizPass: "", duration: 15, points: 2, start: "", end: "" };
-
-        let currentQ = 0, score = 0, currentStudent = "", selectedOption = null, timerInterval = null, timeLeft = 0;
-
-        function switchTab(tab) {
-            ['quiz', 'leaderboard', 'admin'].forEach(t => {
-                document.getElementById('section-' + t).classList.add('hidden');
-                document.getElementById('tab-' + t).classList.remove('active');
-            });
-            document.getElementById('section-' + tab).classList.remove('hidden');
-            document.getElementById('tab-' + tab).classList.add('active');
-            if(tab === 'leaderboard') renderLeaderboard();
-            if(tab === 'admin') loadAdminSettings();
-        }
-
-        function saveSettings() {
-            settings.quizPass = document.getElementById('cfg-quiz-pass').value.trim();
-            settings.duration = parseInt(document.getElementById('cfg-duration').value) || 15;
-            settings.points = parseFloat(document.getElementById('cfg-points').value) || 2;
-            settings.start = document.getElementById('cfg-start').value;
-            settings.end = document.getElementById('cfg-end').value;
-            localStorage.setItem('bio_settings', JSON.stringify(settings));
-            alert("Sozlamalar saqlandi!");
-        }
-
-        function loadAdminSettings() {
-            document.getElementById('cfg-quiz-pass').value = settings.quizPass || "";
-            document.getElementById('cfg-duration').value = settings.duration || 15;
-            document.getElementById('cfg-points').value = settings.points || 2;
-            document.getElementById('cfg-start').value = settings.start || "";
-            document.getElementById('cfg-end').value = settings.end || "";
-            document.getElementById('admin-q-count').innerText = `Jami savollar: ${questions.length} ta`;
-        }
-
-        function startQuiz() {
-            const nameInput = document.getElementById('student-name').value.trim();
-            if(!nameInput) { alert("Ismingizni kiriting!"); return; }
-            if(questions.length === 0) { alert("Savollar topilmadi!"); return; }
-
-            const now = new Date();
-            if(settings.start && new Date(settings.start) > now) { alert("Test hali boshlanmagan!"); return; }
-            if(settings.end && new Date(settings.end) < now) { alert("Test vaqti tugagan!"); return; }
-
-            // TESTGA KIRISH KODI TEKSHIRUVI
-            if(settings.quizPass && settings.quizPass !== "") {
-                const userCode = prompt("Testga kirish kodini kiriting:");
-                if(userCode !== settings.quizPass) {
-                    alert("Test kirish kodi noto'g'ri!");
-                    return;
-                }
-            }
-
-            currentStudent = nameInput; currentQ = 0; score = 0;
-            document.getElementById('start-card').classList.add('hidden');
-            document.getElementById('quiz-card').classList.remove('hidden');
-            startTimer(settings.duration * 60);
-            showQuestion();
-        }
-
-        function startTimer(seconds) {
-            timeLeft = seconds;
-            updateTimerDisplay();
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                if(timeLeft <= 0) { clearInterval(timerInterval); alert("Vaqtingiz tugadi!"); finishQuiz(); }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-            const s = (timeLeft % 60).toString().padStart(2, '0');
-            document.getElementById('timer').innerText = `⏱ ${m}:${s}`;
-        }
-
-        function showQuestion() {
-            selectedOption = null;
-            const q = questions[currentQ];
-            document.getElementById('question-count').innerText = `Savol: ${currentQ + 1} / ${questions.length}`;
-            document.getElementById('question-text').innerText = q.text;
-            
-            const optsBox = document.getElementById('options-container');
-            optsBox.innerHTML = '';
-            q.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "option-btn";
-                btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
-                btn.onclick = () => {
-                    Array.from(optsBox.children).forEach(c => c.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    selectedOption = idx;
-                };
-                optsBox.appendChild(btn);
-            });
-        }
-
-        function nextQuestion() {
-            if(selectedOption === null) { alert("Javob tanlang!"); return; }
-            if(selectedOption === questions[currentQ].correct) score++;
-            currentQ++;
-            if(currentQ < questions.length) showQuestion();
-            else finishQuiz();
-        }
-
-        function finishQuiz() {
-            clearInterval(timerInterval);
-            document.getElementById('quiz-card').classList.add('hidden');
-            document.getElementById('result-card').classList.remove('hidden');
-            const totalPoints = (score * settings.points).toFixed(1);
-            const maxPoints = (questions.length * settings.points).toFixed(1);
-            document.getElementById('score-text').innerHTML = `
-                <b>${currentStudent}</b>,<br>Siz <b>${questions.length}</b> ta savoldan <b>${score} ta</b>siga to'g'ri javob berdingiz.<br>
-                <div style="margin-top:10px; font-weight:bold; color:#047857; font-size:18px;">
-                    To'plangan ball: ${totalPoints} / ${maxPoints}
-                </div>
-            `;
-            leaderboard.push({ name: currentStudent, score: score, total: questions.length, points: totalPoints });
-            localStorage.setItem('bio_leaderboard', JSON.stringify(leaderboard));
-        }
-
-        function renderLeaderboard() {
-            const body = document.getElementById('leaderboard-body');
-            body.innerHTML = '';
-            leaderboard.sort((a,b) => b.points - a.points).forEach((item, i) => {
-                body.innerHTML += `<tr><td><b>${i+1}</b></td><td>${item.name}</td><td>${item.score}/${item.total}</td><td style="color:#059669; font-weight:bold;">${item.points}</td></tr>`;
-            });
-        }
-
-        function checkAdminPassword() {
-            const pass = prompt("Admin paroli:");
-            if(pass === "8888") switchTab('admin');
-            else if(pass !== null) alert("Noto'g'ri parol!");
-        }
-
-        function addQuestion() {
-            const text = document.getElementById('new-q-text').value.trim();
-            const a = document.getElementById('opt-a').value.trim();
-            const b = document.getElementById('opt-b').value.trim();
-            const c = document.getElementById('opt-c').value.trim();
-            const d = document.getElementById('opt-d').value.trim();
-            const correct = parseInt(document.getElementById('correct-opt').value);
-
-            if(!text || !a || !b || !c || !d) { alert("Barcha joylarni to'ldiring!"); return; }
-            questions.push({ text: text, options: [a, b, c, d], correct: correct });
-            localStorage.setItem('bio_questions', JSON.stringify(questions));
-            alert("Savol saqlandi!");
-            document.getElementById('new-q-text').value = '';
-            document.getElementById('opt-a').value = ''; document.getElementById('opt-b').value = '';
-            document.getElementById('opt-c').value = ''; document.getElementById('opt-d').value = '';
-            loadAdminSettings();
-        }
-
-        function clearAllData() {
-            if(confirm("Barcha natijalarni o'chirasizmi?")) {
-                leaderboard = [];
-                localStorage.removeItem('bio_leaderboard');
-                alert("Natijalar tozalandi!");
+                alert("Tozalandi!");
             }
         }
     </script>
