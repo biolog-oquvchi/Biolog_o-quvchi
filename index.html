@@ -3,42 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biolog o'quvchi</title>
+    <title>Biolog O‘quvchi</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: #ecfdf5; color: #1e293b; padding-bottom: 30px; }
+        body { background: #ecfdf5; color: #1e293b; padding-bottom: 30px; }
         header { background: #047857; color: white; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .header-container { max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 18px; font-weight: bold; }
+        .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
         nav { display: flex; gap: 6px; }
-        nav button { border: none; background: transparent; color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
-        nav button.active { background: white; color: #065f46; }
+        nav button { border: none; background: transparent; color: white; padding: 6px 10px; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 500; }
+        nav button.active { background: white; color: #047857; }
         main { max-width: 600px; margin: 15px auto; padding: 0 12px; }
-        .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #a7f3d0; margin-bottom: 15px; }
+        .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 15px; }
         .hidden { display: none !important; }
-        input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-top: 4px; margin-bottom: 12px; }
-        input:focus { border-color: #059669; }
-        label { font-size: 12px; font-weight: bold; color: #334155; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #059669; color: white; font-weight: bold; font-size: 14px; cursor: pointer; }
-        .btn-danger { background: #e11d48; }
-        .quiz-top { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; margin-top: 6px; margin-bottom: 12px; outline: none; }
+        input:focus, select:focus { border-color: #059669; }
+        label { font-size: 13px; font-weight: bold; color: #334155; display: block; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #059669; color: white; font-weight: bold; font-size: 15px; cursor: pointer; text-align: center; }
+        .btn:active { opacity: 0.9; }
+        .btn-danger { background: #ef4444; }
+        .quiz-top { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; font-size: 14px; font-weight: 600; color: #475569; }
         .timer-box { color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 20px; }
-        .q-box { color: #047857; background: #d1fae5; padding: 4px 10px; border-radius: 20px; }
-        .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
-        .option-btn.selected { border-color: #059669; background: #d1fae5; font-weight: bold; }
-        .q-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
-        .del-btn { background: #ffe4e6; color: #e11d48; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px; }
+        .q-box { font-size: 16px; font-weight: 600; margin-bottom: 15px; line-height: 1.4; }
+        .option-btn { width: 100%; text-align: left; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; background: #f8fafc; margin-bottom: 8px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .option-btn.selected { background: #d1fae5; border-color: #059669; font-weight: bold; color: #065f46; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #ecfdf5; color: #065f46; font-size: 11px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        th { background: #ecfdf5; color: #065f46; }
+        .admin-q-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+        .del-btn { background: #ffe4e6; color: #e11d48; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        #welcome-screen { position: fixed; inset: 0; background: #047857; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; text-align: center; padding: 20px; }
+        #welcome-screen h1 { font-size: 24px; margin-bottom: 10px; }
+        #welcome-screen p { font-size: 16px; opacity: 0.9; }
     </style>
 </head>
 <body>
 
+    <!-- WELCOME ANIMATSIYA EKRANI -->
+    <div id="welcome-screen">
+        <h1>Assalomu alaykum!</h1>
+        <p>Bismillahir rohmanir rohim<br><br>Testda omad! 🍀🧬🧪📚</p>
+    </div>
+
     <header>
         <div class="header-container">
-            <div class="logo">🍃 Biolog o'quvchi</div>
+            <div class="logo">🧬 Biolog O‘quvchi</div>
             <nav>
                 <button onclick="switchTab('quiz')" id="tab-quiz" class="active">Test</button>
                 <button onclick="switchTab('leaderboard')" id="tab-leaderboard">Reyting</button>
@@ -48,157 +57,159 @@
     </header>
 
     <main>
-        <!-- TEST BO'LIMI -->
+        <!-- TEST BO‘LIMI -->
         <section id="section-quiz">
+            <!-- 1. ISM KIRITISH VA BOSHLASH -->
             <div id="start-card" class="card" style="text-align: center;">
-                <h2 style="margin-bottom: 10px;">Testga xush kelibsiz!</h2>
-                
-                <div id="saved-user-box" class="hidden" style="margin-bottom: 15px; background: #f0fdf4; padding: 12px; border-radius: 10px; border: 1px solid #bbf7d0;">
-                    <p style="font-size: 14px;">Xush kelibsiz, <b id="display-user-name" style="color: #047857;"></b>!</p>
-                    <button onclick="editUserName()" style="background: none; border: none; color: #0284c7; text-decoration: underline; font-size: 12px; cursor: pointer; margin-top: 4px;">✏️ Ismni o'zgartirish</button>
+                <h2 style="margin-bottom: 15px; color: #065f46;">Biologiya Mock Testiga xush kelibsiz</h2>
+                <div id="saved-user-box" class="hidden" style="margin-bottom: 15px; background: #f0fdf4; padding: 12px; border-radius: 10px;">
+                    <p style="font-size: 14px;">Xush kelibsiz, <b id="display-user-name" style="color: #047857;"></b></p>
+                    <button onclick="editUserName()" style="background: none; border: none; color: #0284c7; text-decoration: underline; cursor: pointer; font-size: 13px; margin-top: 4px;">Ismni o'zgartirish</button>
                 </div>
-
                 <div id="input-name-box" style="text-align: left;">
-                    <label>Ism va Familiyangiz:</label>
+                    <label>Ism va familiyangizni kiriting:</label>
                     <input type="text" id="student-name" placeholder="Masalan: Ali Valiyev">
                 </div>
-
-                <button onclick="startQuiz()" class="btn">Testni boshlash ➔</button>
+                <button onclick="startQuiz()" class="btn" style="margin-top: 15px;">Testni boshlash</button>
             </div>
 
+            <!-- 2. SAVOL OYNASI -->
             <div id="quiz-card" class="card hidden">
                 <div class="quiz-top">
-                    <span id="question-count" class="q-box">Savol: 1 / 0</span>
+                    <span id="question-count">Savol: 1 / 1</span>
                     <span class="timer-box">⏱ <span id="timer-val">00:00</span></span>
                 </div>
-                <div id="question-text" style="font-weight: 600; font-size: 15px; margin-bottom: 15px;"></div>
+                <div id="question-text" class="q-box">Savol matni yuklanmoqda...</div>
                 <div id="options-container"></div>
-                <div style="text-align: right; margin-top: 15px;">
-                    <button onclick="nextQuestion()" class="btn" style="width: auto; padding: 8px 20px;">Keyingisi ➔</button>
+                <div id="text-answer-container" class="hidden">
+                    <label>Javobingizni yozing:</label>
+                    <input type="text" id="user-text-answer" placeholder="Javobni kiriting...">
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button onclick="nextQuestion()" class="btn" style="width: auto; padding: 10px 24px;">Keyingisi ➡️</button>
                 </div>
             </div>
 
+            <!-- 3. NATIJA OYNASI -->
             <div id="result-card" class="card hidden" style="text-align: center;">
-                <h2 style="color: #059669; margin-bottom: 10px;">Test Yakunlandi!</h2>
-                <div id="score-text" style="font-size: 15px; margin-bottom: 15px;"></div>
-                <p style="font-size: 12px; color: #059669; margin-bottom: 15px;">📲 Natijangiz Telegram orqali yuborildi!</p>
+                <h2 style="color: #065f46; margin-bottom: 10px;">🎉 TEST YAKUNLANDI!</h2>
+                <div id="score-text" style="font-size: 16px; margin: 15px 0;"></div>
                 <button onclick="location.reload()" class="btn">Boshiga qaytish</button>
             </div>
         </section>
 
-        <!-- REYTING BO'LIMI -->
-        <section id="section-leaderboard" class="hidden">
-            <div class="card">
-                <h2>🏆 Reyting va Natijalar</h2>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Ism Familiya</th>
-                                <th>To'g'ri</th>
-                                <th>Ball</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-body"></tbody>
-                    </table>
-                </div>
+        <!-- REYTING BO‘LIMI -->
+        <section id="section-leaderboard" class="card hidden">
+            <h2 style="color: #065f46; margin-bottom: 10px;">🥇 Reyting va Natijalar</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ism Familiya</th>
+                            <th>To'g'ri</th>
+                            <th>Ball</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body"></tbody>
+                </table>
             </div>
         </section>
 
-        <!-- ADMIN BO'LIMI -->
-        <section id="section-admin" class="hidden">
-            <div class="card">
-                <h2 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">⚙️ Admin Paneli</h2>
-                
-                <div style="background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0;">
-                    <h3 style="font-size: 13px; color: #166534; margin-bottom: 8px;">Test Sozlamalari</h3>
-                    <div>
-                        <label>Test Kirish Kodi (Bo'sh qolsa kodsiz):</label>
-                        <input type="text" id="cfg-quiz-pass" placeholder="Masalan: 1234">
-                    </div>
-                    <div>
-                        <label>Vaqt (daqiqa):</label>
-                        <input type="number" id="cfg-duration" value="15">
-                    </div>
-                    <div>
-                        <label>Boshlanish vaqti:</label>
-                        <input type="datetime-local" id="cfg-start">
-                    </div>
-                    <div>
-                        <label>Tugash vaqti:</label>
-                        <input type="datetime-local" id="cfg-end">
-                    </div>
-                    <button onclick="saveSettings()" class="btn">Sozlamalarni saqlash</button>
-                </div>
+        <!-- ADMIN PANEL -->
+        <section id="section-admin" class="card hidden">
+            <h2 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; color: #047857;">⚙️ Admin Panel</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <h3 style="font-size: 14px; margin-bottom: 8px;">Test Sozlamalari</h3>
+                <label>Test vaqti (daqiqada):</label>
+                <input type="number" id="cfg-duration" value="15">
+                <button onclick="saveSettings()" class="btn">Sozlamalarni saqlash</button>
+            </div>
 
-                <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;">
-                    <h3 style="font-size: 14px; margin-bottom: 8px;">Yangi Savol Qo'shish</h3>
-                    
-                    <label>Savol Turi:</label>
-                    <select id="q-type" onchange="toggleQType()">
-                        <option value="choice">Yopiq test (ABCD / Variantli)</option>
-                        <option value="text">Ochiq test (Yozma javobli)</option>
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; margin-bottom: 20px;">
+                <h3 style="font-size: 14px; margin-bottom: 8px;">Yangi Savol Qo‘shish</h3>
+                <label>Savol turi:</label>
+                <select id="q-type" onchange="toggleQType()">
+                    <option value="choice">Variantli (A, B, C, D)</option>
+                    <option value="text">Yozma javobli</option>
+                </select>
+
+                <label>Savol matni:</label>
+                <input type="text" id="new-q-text" placeholder="Savol matnini kiriting">
+
+                <label>Ball:</label>
+                <input type="number" id="new-q-points" value="1" min="0.5" step="0.5">
+
+                <div id="choice-fields">
+                    <label>Variantlar:</label>
+                    <input type="text" id="opt-a" placeholder="A variant">
+                    <input type="text" id="opt-b" placeholder="B variant">
+                    <input type="text" id="opt-c" placeholder="C variant">
+                    <input type="text" id="opt-d" placeholder="D variant">
+
+                    <label>To'g'ri javob indeksi (0=A, 1=B, 2=C, 3=D):</label>
+                    <select id="correct-opt">
+                        <option value="0">A variant</option>
+                        <option value="1">B variant</option>
+                        <option value="2">C variant</option>
+                        <option value="3">D variant</option>
                     </select>
-
-                    <input type="text" id="new-q-text" placeholder="Savol matni">
-                    <input type="number" id="new-q-points" placeholder="Ushbu savol bali (Masalan: 2)" value="1" min="0.5" step="0.5">
-
-                    <div id="choice-fields">
-                        <div class="grid-2">
-                            <input type="text" id="opt-a" placeholder="A variant">
-                            <input type="text" id="opt-b" placeholder="B variant">
-                            <input type="text" id="opt-c" placeholder="C variant">
-                            <input type="text" id="opt-d" placeholder="D variant">
-                        </div>
-                        <label>To'g'ri javob varianti:</label>
-                        <select id="correct-opt">
-                            <option value="0">A variant</option>
-                            <option value="1">B variant</option>
-                            <option value="2">C variant</option>
-                            <option value="3">D variant</option>
-                        </select>
-                    </div>
-
-                    <div id="text-fields" class="hidden">
-                        <label>To'g'ri yozma javob matni:</label>
-                        <input type="text" id="correct-text-ans" placeholder="Masalan: Xloroplast">
-                    </div>
-
-                    <button onclick="addQuestion()" class="btn">Savolni saqlash</button>
                 </div>
 
-                <div>
-                    <h3 style="font-size: 14px; margin-bottom: 8px;">Mavjud Savollar Ro'yxati</h3>
-                    <div id="admin-q-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 10px; padding: 4px; margin-bottom: 10px;"></div>
+                <div id="text-fields" class="hidden">
+                    <label>Qabul qilinadigan to'g'ri javob:</label>
+                    <input type="text" id="correct-text-ans" placeholder="Masalan: Xloroplast">
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
-                    <span id="admin-q-count" style="font-size: 12px; font-weight: bold;">Jami savollar: 0 ta</span>
-                    <button onclick="clearAllData()" class="btn btn-danger" style="width: auto; padding: 6px 12px; font-size: 11px;">Natijalarni tozalash</button>
-                </div>
+                <button onclick="addQuestion()" class="btn" style="margin-top: 10px;">Savolni saqlash</button>
+            </div>
+
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                <h3 style="font-size: 14px; margin-bottom: 8px;">Mavjud Savollar Ro'yxati (<span id="admin-q-count">0</span> ta)</h3>
+                <div id="admin-q-list" style="max-height: 250px; overflow-y: auto;"></div>
+            </div>
+
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; margin-top: 20px;">
+                <button onclick="clearLeaderboard()" class="btn btn-danger">Reytingni tozalash</button>
             </div>
         </section>
     </main>
 
     <script>
-        const TELEGRAM_BOT_TOKEN = "8970538193:AAHUjH0FvHIaw1jjq7XZ2iPhBVM-L2uuyi8";
-        const TELEGRAM_CHAT_ID = "244331420";
+        // TELEGRAM BOT CONFIG
+        const TELEGRAM_BOT_TOKEN = "8970538193:AAHJHoFHVlaw1jjq7XZ21Ph8VM-L2auy18";
+        const TELEGRAM_CHAT_ID = "244221620";
 
+        // DEFAULT QUESTIONS
         const DEFAULT_QUESTIONS = [
-            { type: "choice", text: "Hujayra nazariyasiga kim asos solgan?", options: ["Shleydan va Shvann", "R.Guk", "Latsenkos", "I.Pavlov"], correct: 0, points: 1 },
-            { type: "text", text: "Fotosintez jarayoni qaysi organoidda boradi?", correctText: "Xloroplast", points: 2 }
+            { type: "choice", text: "Mitokondriya hujayrada qanday vazifani bajaradi?", options: ["Energiya hosil qilish", "Oqsil sintezi", "Fotosintez", "Moddalar tashish"], correct: 0, points: 1 },
+            { type: "text", text: "Fotosintez jarayoni qaysi organoidda amalga oshadi?", correctText: "Xloroplast", points: 2 }
         ];
 
         let questions = JSON.parse(localStorage.getItem('bio_questions')) || DEFAULT_QUESTIONS;
         let leaderboard = JSON.parse(localStorage.getItem('bio_leaderboard')) || [];
-        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { quizPass: "", duration: 15, start: "", end: "" };
+        let settings = JSON.parse(localStorage.getItem('bio_settings')) || { duration: 15 };
 
-        let currentQ = 0, totalEarnedPoints = 0, maxPossiblePoints = 0, currentStudent = "", selectedOption = null, timerInterval = null, timeLeft = 0;
+        let currentQIndex = 0;
+        let totalEarnedPoints = 0;
+        let maxPossiblePoints = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let currentStudent = "";
+        let userAnswers = {};
+        let timerInterval = null;
+        let timeLeft = 0;
 
+        // Welcome screen timeout
         window.onload = () => {
-            const savedName = localStorage.getItem('bio_student_name');
+            setTimeout(() => {
+                document.getElementById('welcome-screen').style.display = 'none';
+            }, 3000);
+
+            let savedName = localStorage.getItem('bio_student_name');
             if (savedName) {
+                currentStudent = savedName;
                 document.getElementById('student-name').value = savedName;
                 document.getElementById('display-user-name').innerText = savedName;
                 document.getElementById('saved-user-box').classList.remove('hidden');
@@ -212,9 +223,189 @@
             document.getElementById('student-name').focus();
         }
 
+        function switchTab(tab) {
+            ['quiz', 'leaderboard', 'admin'].forEach(t => {
+                document.getElementById('section-' + t).classList.add('hidden');
+                document.getElementById('tab-' + t).classList.remove('active');
+            });
+            document.getElementById('section-' + tab).classList.remove('hidden');
+            document.getElementById('tab-' + tab).classList.add('active');
+
+            if (tab === 'leaderboard') renderLeaderboard();
+            if (tab === 'admin') loadAdminSettings();
+        }
+
+        function startQuiz() {
+            let nameInput = document.getElementById('student-name').value.trim();
+            if (!nameInput) {
+                alert("Iltimos, ism va familiyangizni kiriting!");
+                return;
+            }
+            currentStudent = nameInput;
+            localStorage.setItem('bio_student_name', currentStudent);
+
+            if (questions.length === 0) {
+                alert("Hozircha testda savollar mavjud emas.");
+                return;
+            }
+
+            document.getElementById('start-card').classList.add('hidden');
+            document.getElementById('quiz-card').classList.remove('hidden');
+
+            currentQIndex = 0;
+            totalEarnedPoints = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            userAnswers = {};
+            maxPossiblePoints = questions.reduce((sum, q) => sum + (q.points || 1), 0);
+
+            timeLeft = (settings.duration || 15) * 60;
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishQuiz();
+                    return;
+                }
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                document.getElementById('timer-val').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            if (currentQIndex >= questions.length) {
+                finishQuiz();
+                return;
+            }
+
+            let q = questions[currentQIndex];
+            document.getElementById('question-count').innerText = `Savol: ${currentQIndex + 1} / ${questions.length}`;
+            document.getElementById('question-text').innerText = q.text;
+
+            let optCont = document.getElementById('options-container');
+            let textCont = document.getElementById('text-answer-container');
+            optCont.innerHTML = "";
+
+            if (q.type === 'choice') {
+                optCont.classList.remove('hidden');
+                textCont.classList.add('hidden');
+                q.options.forEach((opt, idx) => {
+                    let btn = document.createElement('button');
+                    btn.className = "option-btn" + (userAnswers[currentQIndex] === idx ? " selected" : "");
+                    btn.innerHTML = `<b>${String.fromCharCode(65 + idx)})</b> ${opt}`;
+                    btn.onclick = () => {
+                        userAnswers[currentQIndex] = idx;
+                        loadQuestion();
+                    };
+                    optCont.appendChild(btn);
+                });
+            } else {
+                optCont.classList.add('hidden');
+                textCont.classList.remove('hidden');
+                let inputField = document.getElementById('user-text-answer');
+                inputField.value = userAnswers[currentQIndex] || "";
+                inputField.oninput = (e) => {
+                    userAnswers[currentQIndex] = e.target.value.trim();
+                };
+            }
+        }
+
+        function nextQuestion() {
+            if (questions[currentQIndex].type === 'text') {
+                let val = document.getElementById('user-text-answer').value.trim();
+                userAnswers[currentQIndex] = val;
+            }
+            currentQIndex++;
+            loadQuestion();
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+
+            // Calculate score
+            totalEarnedPoints = 0;
+            correctCount = 0;
+            wrongCount = 0;
+
+            questions.forEach((q, idx) => {
+                let userAns = userAnswers[idx];
+                if (q.type === 'choice') {
+                    if (userAns === q.correct) {
+                        totalEarnedPoints += (q.points || 1);
+                        correctCount++;
+                    } else {
+                        wrongCount++;
+                    }
+                } else {
+                    if (userAns && q.correctText && userAns.toLowerCase() === q.correctText.toLowerCase()) {
+                        totalEarnedPoints += (q.points || 1);
+                        correctCount++;
+                    } else {
+                        wrongCount++;
+                    }
+                }
+            });
+
+            document.getElementById('quiz-card').classList.add('hidden');
+            document.getElementById('result-card').classList.remove('hidden');
+
+            let percent = Math.round((totalEarnedPoints / maxPossiblePoints) * 100) || 0;
+            document.getElementById('score-text').innerHTML = `
+                <b>Ism:</b> ${currentStudent}<br>
+                <b>To'plagan ball:</b> ${totalEarnedPoints} / ${maxPossiblePoints} (${percent}%)<br>
+                <b>To'g'ri javoblar:</b> ${correctCount}<br>
+                <b>Noto'g'ri javoblar:</b> ${wrongCount}
+            `;
+
+            leaderboard.push({ name: currentStudent, correct: correctCount, points: totalEarnedPoints });
+            leaderboard.sort((a, b) => b.points - a.points);
+            localStorage.setItem('bio_leaderboard', JSON.stringify(leaderboard));
+
+            sendToTelegram(currentStudent, totalEarnedPoints, maxPossiblePoints);
+        }
+
+        function sendToTelegram(student, points, max) {
+            if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+            let text = `🧬 <b>YANGI TEST NATIJASI</b>\n👤 O'quvchi: ${student}\n⭐ Ball: ${points} / ${max}\n⏱ Vaqt: ${new Date().toLocaleString('uz-UZ')}`;
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text, parse_mode: 'HTML' })
+            }).catch(e => console.error('Telegram error:', e));
+        }
+
+        function renderLeaderboard() {
+            let body = document.getElementById('leaderboard-body');
+            body.innerHTML = "";
+            if (leaderboard.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">Hozircha reyting natijalari mavjud emas.</td></tr>`;
+                return;
+            }
+            leaderboard.forEach((item, i) => {
+                let medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`;
+                body.innerHTML += `<tr><td>${medal}</td><td><b>${item.name}</b></td><td>${item.correct}</td><td><b>${item.points}</b></td></tr>`;
+            });
+        }
+
+        function checkAdminPassword() {
+            let pass = prompt("Admin parolini kiriting (Standart: 8888):");
+            if (pass === "8888") {
+                switchTab('admin');
+            } else if (pass !== null) {
+                alert("Noto'g'ri parol!");
+            }
+        }
+
         function toggleQType() {
-            const type = document.getElementById('q-type').value;
-            if(type === 'choice') {
+            let type = document.getElementById('q-type').value;
+            if (type === 'choice') {
                 document.getElementById('choice-fields').classList.remove('hidden');
                 document.getElementById('text-fields').classList.add('hidden');
             } else {
@@ -223,240 +414,89 @@
             }
         }
 
-        function switchTab(tab) {
-            ['quiz', 'leaderboard', 'admin'].forEach(t => {
-                document.getElementById('section-' + t).classList.add('hidden');
-                document.getElementById('tab-' + t).classList.remove('active');
-            });
-            document.getElementById('section-' + tab).classList.remove('hidden');
-            document.getElementById('tab-' + tab).classList.add('active');
-            if(tab === 'leaderboard') renderLeaderboard();
-            if(tab === 'admin') loadAdminSettings();
-        }
+        function addQuestion() {
+            let type = document.getElementById('q-type').value;
+            let text = document.getElementById('new-q-text').value.trim();
+            let points = parseFloat(document.getElementById('new-q-points').value) || 1;
 
-        function saveSettings() {
-            settings.quizPass = document.getElementById('cfg-quiz-pass').value.trim();
-            settings.duration = parseInt(document.getElementById('cfg-duration').value) || 15;
-            settings.start = document.getElementById('cfg-start').value;
-            settings.end = document.getElementById('cfg-end').value;
-            localStorage.setItem('bio_settings', JSON.stringify(settings));
-            alert("Sozlamalar saqlandi!");
-        }
-
-        function loadAdminSettings() {
-            document.getElementById('cfg-quiz-pass').value = settings.quizPass || "";
-            document.getElementById('cfg-duration').value = settings.duration || 15;
-            document.getElementById('cfg-start').value = settings.start || "";
-            document.getElementById('cfg-end').value = settings.end || "";
-            document.getElementById('admin-q-count').innerText = `Jami savollar: ${questions.length} ta`;
-            renderAdminQList();
-        }
-
-        function renderAdminQList() {
-            const listEl = document.getElementById('admin-q-list');
-            listEl.innerHTML = '';
-            if(questions.length === 0) {
-                listEl.innerHTML = `<div style="text-align:center; padding:10px; font-size:12px; color:#94a3b8;">Savollar yo'q</div>`;
+            if (!text) {
+                alert("Savol matnini kiriting!");
                 return;
             }
-            questions.forEach((q, idx) => {
-                const typeTag = (q.type === 'text') ? '[Ochiq]' : '[ABCD]';
-                listEl.innerHTML += `
-                    <div class="q-item">
-                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:75%;">
-                            <b>${idx+1}.</b> <i style="color:#059669">${typeTag}</i> ${q.text} (${q.points || 1} ball)
-                        </span>
-                        <button class="del-btn" onclick="deleteQuestion(${idx})">🗑 O'chirish</button>
-                    </div>
-                `;
-            });
+
+            if (type === 'choice') {
+                let a = document.getElementById('opt-a').value.trim();
+                let b = document.getElementById('opt-b').value.trim();
+                let c = document.getElementById('opt-c').value.trim();
+                let d = document.getElementById('opt-d').value.trim();
+                let correct = parseInt(document.getElementById('correct-opt').value);
+
+                if (!a || !b || !c || !d) {
+                    alert("Barcha 4 ta variantni to'ldiring!");
+                    return;
+                }
+                questions.push({ type: 'choice', text: text, options: [a, b, c, d], correct: correct, points: points });
+                document.getElementById('opt-a').value = "";
+                document.getElementById('opt-b').value = "";
+                document.getElementById('opt-c').value = "";
+                document.getElementById('opt-d').value = "";
+            } else {
+                let correctText = document.getElementById('correct-text-ans').value.trim();
+                if (!correctText) {
+                    alert("To'g'ri yozma javobni kiriting!");
+                    return;
+                }
+                questions.push({ type: 'text', text: text, correctText: correctText, points: points });
+                document.getElementById('correct-text-ans').value = "";
+            }
+
+            localStorage.setItem('bio_questions', JSON.stringify(questions));
+            alert("Savol muvaffaqiyatli saqlandi!");
+            document.getElementById('new-q-text').value = "";
+            loadAdminSettings();
         }
 
-        function deleteQuestion(index) {
-            if(confirm("Ushbu savolni o'chirmoqchimisiz?")) {
-                questions.splice(index, 1);
+        function deleteQuestion(idx) {
+            if (confirm("Ushbu savolni o'chirmoqchimisiz?")) {
+                questions.splice(idx, 1);
                 localStorage.setItem('bio_questions', JSON.stringify(questions));
                 loadAdminSettings();
             }
         }
 
-        function startQuiz() {
-            const nameInput = document.getElementById('student-name').value.trim();
-            if(!nameInput) { alert("Ismingizni kiriting!"); return; }
-            if(questions.length === 0) { alert("Savollar topilmadi!"); return; }
+        function saveSettings() {
+            settings.duration = parseInt(document.getElementById('cfg-duration').value) || 15;
+            localStorage.setItem('bio_settings', JSON.stringify(settings));
+            alert("Sozlamalar saqlandi!");
+        }
 
-            localStorage.setItem('bio_student_name', nameInput);
+        function loadAdminSettings() {
+            document.getElementById('cfg-duration').value = settings.duration || 15;
+            document.getElementById('admin-q-count').innerText = questions.length;
 
-            const now = new Date();
-            if(settings.start && new Date(settings.start) > now) { alert("Test hali boshlanmagan!"); return; }
-            if(settings.end && new Date(settings.end) < now) { alert("Test vaqti tugagan!"); return; }
-
-            if(settings.quizPass && settings.quizPass !== "") {
-                const userCode = prompt("Testga kirish kodini kiriting:");
-                if(userCode !== settings.quizPass) { alert("Test kodi noto'g'ri!"); return; }
+            let listEl = document.getElementById('admin-q-list');
+            listEl.innerHTML = "";
+            if (questions.length === 0) {
+                listEl.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:12px;">Savollar mavjud emas</div>`;
+                return;
             }
-
-            currentStudent = nameInput; 
-            currentQ = 0; 
-            totalEarnedPoints = 0;
-            maxPossiblePoints = questions.reduce((sum, q) => sum + (q.points || 1), 0);
-
-            document.getElementById('start-card').classList.add('hidden');
-            document.getElementById('quiz-card').classList.remove('hidden');
-            startTimer(settings.duration * 60);
-            showQuestion();
-        }
-
-        function startTimer(seconds) {
-            timeLeft = seconds;
-            const timerEl = document.getElementById('timer-val');
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                const s = (timeLeft % 60).toString().padStart(2, '0');
-                if(timerEl) timerEl.innerText = `${m}:${s}`;
-                if(timeLeft <= 0) { clearInterval(timerInterval); alert("Vaqtingiz tugadi!"); finishQuiz(); }
-            }, 1000);
-        }
-
-        function showQuestion() {
-            selectedOption = null;
-            const q = questions[currentQ];
-            document.getElementById('question-count').innerText = `Savol: ${currentQ + 1} / ${questions.length} (${q.points || 1} ball)`;
-            document.getElementById('question-text').innerText = q.text;
-            
-            const optsBox = document.getElementById('options-container');
-            optsBox.innerHTML = '';
-
-            if(q.type === 'text') {
-                optsBox.innerHTML = `
-                    <label style="margin-bottom: 4px; display:block;">Javobingizni yozing:</label>
-                    <input type="text" id="open-ans-input" placeholder="Javobingizni shu yerga kiriting..." style="margin-bottom:0;">
+            questions.forEach((q, idx) => {
+                let typeTag = q.type === 'text' ? '[Yozma]' : '[Variantli]';
+                listEl.innerHTML += `
+                    <div class="admin-q-item">
+                        <span><b>${idx + 1}.</b> ${typeTag} ${q.text} (${q.points} ball)</span>
+                        <button class="del-btn" onclick="deleteQuestion(${idx})">O'chirish</button>
+                    </div>
                 `;
-            } else {
-                q.options.forEach((opt, idx) => {
-                    const btn = document.createElement('button');
-                    btn.className = "option-btn";
-                    btn.innerText = `${String.fromCharCode(65+idx)}) ${opt}`;
-                    btn.onclick = () => {
-                        const children = optsBox.children;
-                        for(let i=0; i<children.length; i++) children[i].classList.remove('selected');
-                        btn.classList.add('selected');
-                        selectedOption = idx;
-                    };
-                    optsBox.appendChild(btn);
-                });
-            }
-        }
-
-        function nextQuestion() {
-            const q = questions[currentQ];
-            const qPoints = q.points || 1;
-
-            if(q.type === 'text') {
-                const userAns = document.getElementById('open-ans-input').value.trim().toLowerCase();
-                if(!userAns) { alert("Javobingizni kiriting!"); return; }
-                if(userAns === q.correctText.trim().toLowerCase()) {
-                    totalEarnedPoints += qPoints;
-                }
-            } else {
-                if(selectedOption === null) { alert("Javob tanlang!"); return; }
-                if(selectedOption === q.correct) {
-                    totalEarnedPoints += qPoints;
-                }
-            }
-
-            currentQ++;
-            if(currentQ < questions.length) showQuestion();
-            else finishQuiz();
-        }
-
-        function finishQuiz() {
-            clearInterval(timerInterval);
-            document.getElementById('quiz-card').classList.add('hidden');
-            document.getElementById('result-card').classList.remove('hidden');
-            
-            document.getElementById('score-text').innerHTML = `
-                <b>${currentStudent}</b>,<br>Test yakunlandi.<br>
-                <div style="margin-top:10px; font-weight:bold; color:#047857; font-size:18px;">
-                    To'plangan ball: ${totalEarnedPoints} / ${maxPossiblePoints}
-                </div>
-            `;
-
-            leaderboard.push({ name: currentStudent, points: totalEarnedPoints, max: maxPossiblePoints });
-            localStorage.setItem('bio_leaderboard', JSON.stringify(leaderboard));
-
-            sendToTelegram(currentStudent, totalEarnedPoints, maxPossiblePoints);
-        }
-
-        function sendToTelegram(student, points, max) {
-            const text = `📊 *YANGI TEST NATIJASI*\n\n` +
-                         `👤 *O'quvchi:* ${student}\n` +
-                         `⭐ *Ball:* ${points} / ${max}\n` +
-                         `📅 *Vaqt:* ${new Date().toLocaleString('uz-UZ')}`;
-
-            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: text,
-                    parse_mode: 'Markdown'
-                })
-            }).catch(e => console.error('Telegram error:', e));
-        }
-
-        function renderLeaderboard() {
-            const body = document.getElementById('leaderboard-body');
-            body.innerHTML = '';
-            leaderboard.sort((a,b) => b.points - a.points).forEach((item, i) => {
-                body.innerHTML += `<tr><td><b>${i+1}</b></td><td>${item.name}</td><td>-</td><td style="color:#059669; font-weight:bold;">${item.points} / ${item.max}</td></tr>`;
             });
         }
 
-        function checkAdminPassword() {
-            const pass = prompt("Admin paroli:");
-            if(pass === "8888") switchTab('admin');
-            else if(pass !== null) alert("Noto'g'ri parol!");
-        }
-
-        function addQuestion() {
-            const type = document.getElementById('q-type').value;
-            const text = document.getElementById('new-q-text').value.trim();
-            const points = parseFloat(document.getElementById('new-q-points').value) || 1;
-
-            if(!text) { alert("Savol matnini kiriting!"); return; }
-
-            if(type === 'text') {
-                const correctText = document.getElementById('correct-text-ans').value.trim();
-                if(!correctText) { alert("To'g'ri yozma javobni kiriting!"); return; }
-                questions.push({ type: "text", text: text, correctText: correctText, points: points });
-                document.getElementById('correct-text-ans').value = '';
-            } else {
-                const a = document.getElementById('opt-a').value.trim();
-                const b = document.getElementById('opt-b').value.trim();
-                const c = document.getElementById('opt-c').value.trim();
-                const d = document.getElementById('opt-d').value.trim();
-                const correct = parseInt(document.getElementById('correct-opt').value);
-
-                if(!a || !b || !c || !d) { alert("Barcha variantlarni to'ldiring!"); return; }
-                questions.push({ type: "choice", text: text, options: [a, b, c, d], correct: correct, points: points });
-                document.getElementById('opt-a').value = ''; document.getElementById('opt-b').value = '';
-                document.getElementById('opt-c').value = ''; document.getElementById('opt-d').value = '';
-            }
-
-            localStorage.setItem('bio_questions', JSON.stringify(questions));
-            alert("Savol saqlandi!");
-            document.getElementById('new-q-text').value = '';
-            loadAdminSettings();
-        }
-
-        function clearAllData() {
-            if(confirm("Natijalarni o'chirasizmi?")) {
+        function clearLeaderboard() {
+            if (confirm("Haqiqatan ham barcha reyting natijalarini o'chirmoqchimisiz?")) {
                 leaderboard = [];
                 localStorage.removeItem('bio_leaderboard');
-                alert("Tozalandi!");
+                renderLeaderboard();
+                alert("Reyting tozalandi!");
             }
         }
     </script>
